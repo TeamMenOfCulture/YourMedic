@@ -11,6 +11,7 @@
     "debug": "~2.6.9",
     "dotenv": "^16.0.3",
     "express": "~4.16.1",
+    "firebase-admin": "^11.10.1",
     "http-errors": "~1.6.3",
     "lodash": "^4.17.21",
     "microsoft-cognitiveservices-speech-sdk": "^1.23.0",

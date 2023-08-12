@@ -26,3 +26,6 @@ configurations/*
 
 .env
 public/speech*
+
+#firebase
+/secret

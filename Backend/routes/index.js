@@ -16,4 +16,24 @@ router.post('/talk', function(req, res, next) {
 
 });
 
+router.post('/database', async function(req,res){
+  id=req.body.id;
+  data=req.body.data;
+
+})
+
+router.post("/name", async (req, res) => {
+  const id = req.query.id;
+  if (id != undefined) {
+    rlname = await db
+      .collection(id)
+      .doc("sQaNcfpgRu7wyzNHfeNDgB7cJil3cb8eYH9pMpTp")
+      .get();
+    realname = rlname._fieldsProto.myName.stringValue;
+    if (realname != undefined) {
+      res.status(200).json(realname);
+    }
+  }
+});
+
 module.exports = router;

@@ -4,10 +4,28 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-
 var indexRouter = require('./routes/index');
-
+const {
+  initializeApp,
+  applicationDefault,
+  cert,
+} = require("firebase-admin/app");
+const {
+  getFirestore,
+  Timestamp,
+  FieldValue,
+  Filter,
+} = require("firebase-admin/firestore");
 var app = express();
+
+credentials = path.join(__dirname, "secret/secret.json");
+const serviceAccount = require(credentials);
+
+initializeApp({
+  credential: cert(serviceAccount),
+});
+
+const db = getFirestore();
 
 
 // view engine setup
@@ -42,4 +60,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = app,db;
