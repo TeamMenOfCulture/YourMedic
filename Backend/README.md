@@ -1,4 +1,4 @@
-# Talking Avatar backend
+# MediHelpAI backend
 The text to speech and blendShapes converter for https://github.com/bornfree/talking_avatar.
 Uses the [Azure APIs](https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-speech-synthesis-viseme) to get stuff done.
 
