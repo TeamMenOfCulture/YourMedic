@@ -16,13 +16,15 @@ import { LinearEncoding, sRGBEncoding } from "three/src/constants";
 import { LineBasicMaterial, MeshPhysicalMaterial, Vector2 } from "three";
 import ReactAudioPlayer from "react-audio-player";
 
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
+
 import createAnimation from "./converter";
 import blinkData from "./blendDataBlink.json";
 
 import * as THREE from "three";
 import axios from "axios";
-
-import { Navbar, Nav } from 'rsuite';
 
 const _ = require("lodash");
 const { Configuration, OpenAIApi } = require("openai");
@@ -332,17 +334,17 @@ async function makeSpeech(text) {
 
 const STYLES = {
   navbar: {
-    position: 'fixed',
+    position: "fixed",
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1000,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px 20px',
-    backgroundColor: '#333',
-    color: '#fff',
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 20px",
+    backgroundColor: "#333",
+    color: "#fff",
   },
   leftContent: {
     flex: 1,
@@ -384,7 +386,7 @@ const STYLES = {
   },
   area2: { position: "absolute", top: "5px", right: "15px", zIndex: 500 },
   label: { color: "#777777", fontSize: "0.8em" },
-  a1:{position:'sticky'},
+  a1: { position: "sticky" },
 };
 
 function App() {
@@ -402,7 +404,12 @@ function App() {
     setSpeak(false);
     setPlaying(false);
   }
-
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
   // Player is read
   function playerReady(e) {
     audioPlayer.current.audioEl.current.play();
@@ -412,29 +419,34 @@ function App() {
     return (
       <div className="full">
         <div style={STYLES.area}>
-        <div style={STYLES.a1}>
-          <nav style={STYLES.navbar}>
-            <div style={STYLES.leftContent}>Hello World</div>
-            <div style={STYLES.rightContent}>
-              {isAuthenticated && (
-                <button style={STYLES.logoutButton} onClick={logout}>
-                  Logout
-                </button>
-              )}
-            </div>
-          </nav>
-        </div>
+          <div style={STYLES.a1}>
+            <nav style={STYLES.navbar}>
+              <div style={STYLES.leftContent}>Hello World</div>
+              <div style={STYLES.rightContent}>
+                {isAuthenticated && (
+                  <button style={STYLES.logoutButton} onClick={logout}>
+                    Logout
+                  </button>
+                )}
+              </div>
+            </nav>
+          </div>
           <textarea
             rows={4}
             type="text"
             style={STYLES.text}
-            value={text}
+            value={transcript}
             onChange={(e) => setText(e.target.value.substring(0, 200))}
           />
-          <button onClick={() => setSpeak(true)} style={STYLES.speak}>
-            {" "}
-            {speak ? "Running..." : "Speak"}
+        {/* <p>Microphone: {listening ? "on" : "off"}</p> */}
+          <button onClick={SpeechRecognition.startListening}>Start</button>
+          <button onClick={()=>{setSpeak();SpeechRecognition.stopListening();}}>Stop
           </button>
+          {/* <button onClick={resetTranscript}>Reset</button> */}
+          {/* <button onClick={() => setSpeak(true)} style={STYLES.speak}> */}
+            {/*  */}
+            {/* {speak ? "Running..." : "Speak"} */}
+          {/* </button> */}
           <button onClick={logout}>Logout</button>
         </div>
 
