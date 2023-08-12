@@ -21,6 +21,9 @@ import blinkData from "./blendDataBlink.json";
 
 import * as THREE from "three";
 import axios from "axios";
+
+import { Navbar, Nav } from 'rsuite';
+
 const _ = require("lodash");
 const { Configuration, OpenAIApi } = require("openai");
 
@@ -308,7 +311,7 @@ async function makeSpeech(text) {
 
     messages: message,
     temperature: 0.2,
-    max_tokens: 50,
+    max_tokens: 100,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
@@ -328,6 +331,39 @@ async function makeSpeech(text) {
 }
 
 const STYLES = {
+  navbar: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '10px 20px',
+    backgroundColor: '#333',
+    color: '#fff',
+  },
+  leftContent: {
+    flex: 1,
+  },
+  rightContent: {},
+  loginButton: {
+    padding: "8px 16px",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  logoutButton: {
+    padding: "8px 16px",
+    backgroundColor: "#dc3545",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
   area: { position: "absolute", bottom: "10px", left: "10px", zIndex: 500 },
   text: {
     margin: "0px",
@@ -348,6 +384,7 @@ const STYLES = {
   },
   area2: { position: "absolute", top: "5px", right: "15px", zIndex: 500 },
   label: { color: "#777777", fontSize: "0.8em" },
+  a1:{position:'sticky'},
 };
 
 function App() {
@@ -355,9 +392,7 @@ function App() {
   const audioPlayer = useRef();
 
   const [speak, setSpeak] = useState(false);
-  const [text, setText] = useState(
-    "My name is Arwen. I'm a virtual human who can speak whatever you type here along with realistic facial movements."
-  );
+  const [text, setText] = useState("I have fever");
   const [audioSource, setAudioSource] = useState(null);
   const [playing, setPlaying] = useState(false);
 
@@ -373,87 +408,98 @@ function App() {
     audioPlayer.current.audioEl.current.play();
     setPlaying(true);
   }
-  if(isAuthenticated){
-  return (
-    <div className="full">
-      meow
-      <div style={STYLES.area}>
-        <button onClick={logout}>Logout</button>
-        <textarea
-          rows={4}
-          type="text"
-          
-          style={STYLES.text}
-          value={text}
-          onChange={(e) => setText(e.target.value.substring(0, 200))}
+  if (isAuthenticated) {
+    return (
+      <div className="full">
+        <div style={STYLES.area}>
+        <div style={STYLES.a1}>
+          <nav style={STYLES.navbar}>
+            <div style={STYLES.leftContent}>Hello World</div>
+            <div style={STYLES.rightContent}>
+              {isAuthenticated && (
+                <button style={STYLES.logoutButton} onClick={logout}>
+                  Logout
+                </button>
+              )}
+            </div>
+          </nav>
+        </div>
+          <textarea
+            rows={4}
+            type="text"
+            style={STYLES.text}
+            value={text}
+            onChange={(e) => setText(e.target.value.substring(0, 200))}
+          />
+          <button onClick={() => setSpeak(true)} style={STYLES.speak}>
+            {" "}
+            {speak ? "Running..." : "Speak"}
+          </button>
+          <button onClick={logout}>Logout</button>
+        </div>
+
+        <ReactAudioPlayer
+          src={audioSource}
+          ref={audioPlayer}
+          onEnded={playerEnded}
+          onCanPlayThrough={playerReady}
         />
-        <button onClick={() => setSpeak(true)} style={STYLES.speak}>
-          {" "}
-          {speak ? "Running..." : "Speak"}
-        </button>
-      </div>
-    
-      <ReactAudioPlayer
-        src={audioSource}
-        ref={audioPlayer}
-        onEnded={playerEnded}
-        onCanPlayThrough={playerReady}
-      />
 
-     {/* <Stats /> */}
-      <Canvas
-        dpr={2}
-        onCreated={(ctx) => {
-          ctx.gl.physicallyCorrectLights = true;
-        }}
-      >
-        <OrthographicCamera makeDefault zoom={1750} position={[0, 1.66, 1]} />
+        {/* <Stats /> */}
+        <Canvas
+          dpr={2}
+          onCreated={(ctx) => {
+            ctx.gl.physicallyCorrectLights = true;
+          }}
+        >
+          <OrthographicCamera makeDefault zoom={1500} position={[0, 1.66, 1]} />
 
-        {/* <OrbitControls
+          {/* <OrbitControls
         target={[0, 1.65, 0]}
       /> */}
 
-        <Suspense fallback={null}>
-          <Environment
-            background={false}
-            files="/images/photo_studio_loft_hall_1k.hdr"
-          />
-        </Suspense>
+          <Suspense fallback={null}>
+            <Environment
+              background={false}
+              files="/images/photo_studio_loft_hall_1k.hdr"
+            />
+          </Suspense>
 
-        <Suspense fallback={null}>
-          <Bg />
-        </Suspense>
+          <Suspense fallback={null}>
+            <Bg />
+          </Suspense>
 
-        <Suspense fallback={null}>
-          <Avatar
-            avatar_url="/model.glb"
-            speak={speak}
-            setSpeak={setSpeak}
-            text={text}
-            setAudioSource={setAudioSource}
-            playing={playing}
-          />
-        </Suspense>
-      </Canvas>
-      <Loader dataInterpolation={(p) => `Loading... please wait`} />
-    </div>
-    );}
-
-    else{
-      return (
-        <div>
+          <Suspense fallback={null}>
+            <Avatar
+              avatar_url="/model.glb"
+              speak={speak}
+              setSpeak={setSpeak}
+              text={text}
+              setAudioSource={setAudioSource}
+              playing={playing}
+            />
+          </Suspense>
+        </Canvas>
+        <Loader dataInterpolation={(p) => `Loading... please wait`} />
+      </div>
+    );
+  } else {
+    return (
+      <div>
         Hi Login Please
-        <button onClick={loginWithPopup}>Login Here</button>
-        </div>
-        );
-    }
+        <button style={STYLES.loginButton} onClick={loginWithPopup}>
+          Login Here
+        </button>
+      </div>
+    );
+  }
 }
 
 function Bg() {
   const texture = useTexture("/images/bg.webp");
 
   return (
-    <mesh position={[0, 1.5, -2]} scale={[0.8, 0.8, 0.8]}>
+    <mesh position={[0, 1.55, -2]} scale={[1, 1, 1]}>
       <planeBufferGeometry />
       <meshBasicMaterial map={texture} />
     </mesh>
