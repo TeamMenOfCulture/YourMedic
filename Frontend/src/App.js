@@ -415,13 +415,14 @@ function App() {
     audioPlayer.current.audioEl.current.play();
     setPlaying(true);
   }
+  console.log();
   if (isAuthenticated) {
     return (
       <div className="full">
         <div style={STYLES.area}>
           <div style={STYLES.a1}>
             <nav style={STYLES.navbar}>
-              <div style={STYLES.leftContent}>Hello World</div>
+              <div style={STYLES.leftContent}>Hey, {user.given_name}!</div>
               <div style={STYLES.rightContent}>
                 {isAuthenticated && (
                   <button style={STYLES.logoutButton} onClick={logout}>
@@ -448,6 +449,7 @@ function App() {
             {/* {speak ? "Running..." : "Speak"} */}
           {/* </button> */}
           <button onClick={logout}>Logout</button>
+        
         </div>
 
         <ReactAudioPlayer
