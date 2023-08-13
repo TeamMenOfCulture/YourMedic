@@ -53,3 +53,50 @@ body{
   background-position: top;
 }
 
+.startButton{
+  width: 100px;
+  height: 100px;
+}
+
+.sendButton{
+  width: 100px;
+  height: 100px;
+}
+
+.mainarea{
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+
+/* Styles for the buttons */
+.startButton,
+.sendButton {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background-color: #3498db;
+  color: #ffffff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 5px;
+  transition: background-color 0.3s, transform 0.2s; /* Add transitions for smooth animations */
+}
+
+.startButton:hover,
+.sendButton:hover {
+  background-color: #2980b9; /* Change color when hovered */
+  transform: scale(1.1); /* Add a scale effect when hovered */
+}
+
+.sendButton {
+  background-color: #27ae60;
+}
+
+.sendButton:hover {
+  background-color: #219951; /* Change color when hovered */
+}
