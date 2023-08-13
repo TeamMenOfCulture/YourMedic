@@ -391,6 +391,7 @@ const STYLES = {
   loginSection: {
     backgroundColor: "#222",
     padding: "40px",
+    
     borderRadius: "15px",
     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
