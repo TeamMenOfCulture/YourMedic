@@ -18,11 +18,11 @@ To install and run YourMedic on your local machine, follow these steps:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/subinoybiswas/friend.ly.git
+   git clone https://github.com/subinoybiswas/YourMedic.git
    ```
 2. Navigate to the project directory:
    ```
-   cd friend.ly
+   cd YourMedic
    ```
 3. Navigate to `Backend` (Root of the Node project):
    ```
@@ -34,7 +34,7 @@ To install and run YourMedic on your local machine, follow these steps:
    ```
 5. Navigate to `Frontend` (Root of the Node project):
    ```
-   cd Backend
+   cd Frontend
    ```
 6. Install the dependencies:
    ```
@@ -52,8 +52,8 @@ Before running the application, you need to set up the following configurations:
    ```
 3. In the `Frontend`, add the `.env` in the following format:
 ```
-REACT_APP_ALTER_API=ay2yf57jbtyicu6r44i5xpy2tv62hgp33xli3hsajyidhbo3nmiblgi
-REACT_APP_OPENAI_API_KEY=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
+REACT_APP_ALTER_API=
+REACT_APP_OPENAI_API_KEY=
 ``` 
 
 ## Backend
