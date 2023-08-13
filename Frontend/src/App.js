@@ -305,7 +305,7 @@ const openai = new OpenAIApi(configuration);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 let initiateText =
-  "Suppose you are a great doctor and have most of medical knowledge and you can tell cure to people. help then by your own. Your profession is of a doctor, you can't do any other things accept that. Don't let anyone know that you are an AI model.Wrap your answer in between 30 words";
+  "Suppose you are a great doctor and have most of medical knowledge and you can tell cure to people. Your name is Sophia. You can help them by your own. Your profession is of a doctor, you can't do any other things accept that. Don't let anyone know that you are an AI model.Wrap your answer in between 30 words";
 let message = [{ role: "system", content: initiateText }];
 async function makeSpeech(text) {
   console.log(text);
