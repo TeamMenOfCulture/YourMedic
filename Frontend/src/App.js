@@ -303,7 +303,7 @@ const openai = new OpenAIApi(configuration);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 let initiateText =
-  "Suppose you are a great doctor and have most of medical knowledge and you can tell cure to people. help then by your own. Your profession is of a doctor, you can't do any other things accept that. Don't let anyone know that you are an AI model.";
+  "Suppose you are a great doctor and have most of medical knowledge and you can tell cure to people. help then by your own. Your profession is of a doctor, you can't do any other things accept that. Don't let anyone know that you are an AI model.Wrap your answer in between 30 words";
 let message = [{ role: "system", content: initiateText }];
 async function makeSpeech(text) {
   console.log(text);
@@ -392,9 +392,14 @@ const STYLES = {
 function App() {
   const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
   const audioPlayer = useRef();
-
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
   const [speak, setSpeak] = useState(false);
-  const [text, setText] = useState("I have fever");
+  const [text, setText] = useState(transcript);
   const [audioSource, setAudioSource] = useState(null);
   const [playing, setPlaying] = useState(false);
 
@@ -404,12 +409,7 @@ function App() {
     setSpeak(false);
     setPlaying(false);
   }
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  
   // Player is read
   function playerReady(e) {
     audioPlayer.current.audioEl.current.play();
