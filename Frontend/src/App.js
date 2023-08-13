@@ -304,14 +304,13 @@ const openai = new OpenAIApi(configuration);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 let initiateText =
-  "Suppose you are a great doctor and have most of medical knowledge and you can tell cure to people. help then by your own. Your profession is of a doctor, you can't do any other things accept that. Don't let anyone know that you are an AI model.Wrap your answer in between 30 words";
+  "Suppose you are a great doctor and have most of medical knowledge and you can tell cure to people. Your name is Sophia. You can help them by your own. Your profession is of a doctor, you can't do any other things accept that. Don't let anyone know that you are an AI model.Wrap your answer in between 30 words";
 let message = [{ role: "system", content: initiateText }];
 async function makeSpeech(text) {
   console.log(text);
   message.push({ role: "user", content: text });
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
-
     messages: message,
     temperature: 0.2,
     max_tokens: 100,
@@ -391,7 +390,7 @@ const STYLES = {
   loginSection: {
     backgroundColor: "#222",
     padding: "40px",
-    
+
     borderRadius: "15px",
     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
@@ -399,9 +398,9 @@ const STYLES = {
     margin: "auto",
     color: "#fff",
   },
-  mainbg:{
+  mainbg: {
     backgroundColor: "#222",
-  }
+  },
 };
 
 function App() {
@@ -424,7 +423,7 @@ function App() {
     setSpeak(false);
     setPlaying(false);
   }
-  
+
   // Player is read
   function playerReady(e) {
     audioPlayer.current.audioEl.current.play();
@@ -434,93 +433,116 @@ function App() {
   if (isAuthenticated) {
     return (
       <body style={STYLES.mainbg}>
-
-      <div className="full">
-        <div style={STYLES.area}>
-          <div style={STYLES.a1}>
-            <nav style={STYLES.navbar}>
-              <div style={STYLES.leftContent}>Hey, {user.given_name}!</div>
-              <div style={STYLES.rightContent}>
-                {isAuthenticated && (
-                  <button style={STYLES.logoutButton} onClick={logout}>
-                    Logout
-                  </button>
-                )}
+        <div className="full">
+          <div style={STYLES.area}>
+            <div style={STYLES.a1}>
+              <nav style={STYLES.navbar}>
+                <div style={STYLES.leftContent}>Hey, {user.given_name}!</div>
+                <div style={STYLES.rightContent}>
+                  {isAuthenticated && (
+                    <button style={STYLES.logoutButton} onClick={logout}>
+                      Logout
+                    </button>
+                  )}
+                </div>
+              </nav>
+            </div>
+            <div class="mainarea">
+              <textarea
+                rows={4}
+                type="text"
+                style={STYLES.text}
+                value={transcript}
+                onChange={(e) => setText(e.target.value.substring(0, 200))}
+              />
+              {/* <p>Microphone: {listening ? "on" : "off"}</p> */}
+              <div>
+                <button
+                  onClick={SpeechRecognition.startListening}
+                  class="startButton"
+                >
+                  TALK
+                </button>
               </div>
-            </nav>
-          </div>
-          <textarea
-            rows={4}
-            type="text"
-            style={STYLES.text}
-            value={transcript}
-            onChange={(e) => setText(e.target.value.substring(0, 200))}
-          />
-        {/* <p>Microphone: {listening ? "on" : "off"}</p> */}
-          <button onClick={SpeechRecognition.startListening}>Start</button>
-          <button onClick={()=>{setSpeak();SpeechRecognition.stopListening();}}>Stop
-          </button>
-          {/* <button onClick={resetTranscript}>Reset</button> */}
-          {/* <button onClick={() => setSpeak(true)} style={STYLES.speak}> */}
+              <div>
+                <button
+                  onClick={() => {
+                    setSpeak();
+                    SpeechRecognition.stopListening();
+                  }}
+                  class="sendButton"
+                >
+                  SEND
+                </button>
+              </div>
+            </div>
+            {/* <button onClick={resetTranscript}>Reset</button> */}
+            {/* <button onClick={() => setSpeak(true)} style={STYLES.speak}> */}
             {/*  */}
             {/* {speak ? "Running..." : "Speak"} */}
-          {/* </button> */}
-          <button onClick={logout}>Logout</button>
-        
-        </div>
+            {/* </button> */}
+          </div>
 
-        <ReactAudioPlayer
-          src={audioSource}
-          ref={audioPlayer}
-          onEnded={playerEnded}
-          onCanPlayThrough={playerReady}
-        />
+          <ReactAudioPlayer
+            src={audioSource}
+            ref={audioPlayer}
+            onEnded={playerEnded}
+            onCanPlayThrough={playerReady}
+          />
 
-        {/* <Stats /> */}
-        <Canvas
-          dpr={2}
-          onCreated={(ctx) => {
-            ctx.gl.physicallyCorrectLights = true;
-          }}
-        >
-          <OrthographicCamera makeDefault zoom={1500} position={[0, 1.66, 1]} />
+          {/* <Stats /> */}
+          <Canvas
+            dpr={2}
+            onCreated={(ctx) => {
+              ctx.gl.physicallyCorrectLights = true;
+            }}
+          >
+            <OrthographicCamera
+              makeDefault
+              zoom={1500}
+              position={[0, 1.66, 1]}
+            />
 
-          {/* <OrbitControls
+            {/* <OrbitControls
         target={[0, 1.65, 0]}
       /> */}
 
-          <Suspense fallback={null}>
-            <Environment
-              background={false}
-              files="/images/photo_studio_loft_hall_1k.hdr"
-            />
-          </Suspense>
+            <Suspense fallback={null}>
+              <Environment
+                background={false}
+                files="/images/photo_studio_loft_hall_1k.hdr"
+              />
+            </Suspense>
 
-          <Suspense fallback={null}>
-            <Bg />
-          </Suspense>
+            <Suspense fallback={null}>
+              <Bg />
+            </Suspense>
 
-          <Suspense fallback={null}>
-            <Avatar
-              avatar_url="/model.glb"
-              speak={speak}
-              setSpeak={setSpeak}
-              text={text}
-              setAudioSource={setAudioSource}
-              playing={playing}
-            />
-          </Suspense>
-        </Canvas>
-        <Loader dataInterpolation={(p) => `Loading... please wait`} />
-      </div>
-        </body>
+            <Suspense fallback={null}>
+              <Avatar
+                avatar_url="/model.glb"
+                speak={speak}
+                setSpeak={setSpeak}
+                text={transcript}
+                setAudioSource={setAudioSource}
+                playing={playing}
+              />
+            </Suspense>
+          </Canvas>
+          <Loader dataInterpolation={(p) => `Loading... please wait`} />
+        </div>
+      </body>
     );
   } else {
     return (
       <body class="loginBG">
         <div style={STYLES.loginSection} className="loginSection">
-          <h1 class="Headline">Hi, I am Sophia</h1>
-          <h2 class="Tagline">Sign Up to get your own AI Medic</h2>
+          <h1 class="Headline">
+            Your<span class="medic">Medic</span>
+          </h1>
+          <h2 class="Tagline">
+            Hi, I am Sophia. Sign Up to get me as your own AI Medic
+          </h2>
           <button
             style={STYLES.loginButton}
             className="loginButton"
