@@ -11,6 +11,7 @@ import {
 } from "@react-three/drei";
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { useAuth0 } from "@auth0/auth0-react";
+import "./App.css"; // Import the CSS file
 
 import { LinearEncoding, sRGBEncoding } from "three/src/constants";
 import { LineBasicMaterial, MeshPhysicalMaterial, Vector2 } from "three";
@@ -387,6 +388,19 @@ const STYLES = {
   area2: { position: "absolute", top: "5px", right: "15px", zIndex: 500 },
   label: { color: "#777777", fontSize: "0.8em" },
   a1: { position: "sticky" },
+  loginSection: {
+    backgroundColor: "#222",
+    padding: "40px",
+    borderRadius: "15px",
+    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+    textAlign: "center",
+    maxWidth: "1100px",
+    margin: "auto",
+    color: "#fff",
+  },
+  mainbg:{
+    backgroundColor: "#222",
+  }
 };
 
 function App() {
@@ -418,6 +432,8 @@ function App() {
   console.log();
   if (isAuthenticated) {
     return (
+      <body style={STYLES.mainbg}>
+
       <div className="full">
         <div style={STYLES.area}>
           <div style={STYLES.a1}>
@@ -496,15 +512,23 @@ function App() {
         </Canvas>
         <Loader dataInterpolation={(p) => `Loading... please wait`} />
       </div>
+        </body>
     );
   } else {
     return (
-      <div>
-        Hi Login Please
-        <button style={STYLES.loginButton} onClick={loginWithPopup}>
-          Login Here
-        </button>
-      </div>
+      <body class="loginBG">
+        <div style={STYLES.loginSection} className="loginSection">
+          <h1 class="Headline">Hi, I am Sophia</h1>
+          <h2 class="Tagline">Sign Up to get your own AI Medic</h2>
+          <button
+            style={STYLES.loginButton}
+            className="loginButton"
+            onClick={loginWithPopup}
+          >
+            Get Started
+          </button>
+        </div>
+      </body>
     );
   }
 }
