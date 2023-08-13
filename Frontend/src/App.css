@@ -1,0 +1,55 @@
+/* styles.css */
+.loginButton {
+    background-color: #007bff;
+    color: white;
+    padding: 20px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    font-size: 15px;
+  }
+  
+  .loginButton:hover {
+    background-color: white;
+    color: black; /* Change text color to black */
+    transform: scale(1.1);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.466);
+  }
+
+.loginSection:hover {
+  transform: scale(1.01);
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.466);
+  transition: transform 0.3s, box-shadow 0.3s; /* Added transition */
+
+}
+
+.loginSection {
+    /* Other styles for the login section */
+    background-color: rgb(27, 27, 27);
+    position: absolute;
+    left: 25%;
+    right: 25%;
+    top: 28%;
+    bottom: 28%;
+    transition: transform 0.3s, background-image 1s ease-in-out; /* Added background-image transition */
+    
+}
+
+.Headline{
+    font-size: 50px;
+    text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.451);
+    /* padding: 50px; */
+}
+.Tagline{
+    font-size: 20px;
+    text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.451);
+    padding-bottom: 50px;
+}
+body{
+    background-image: url("./login-bg.jpg"); /* URL to your image */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top;
+}
+

@@ -18,6 +18,7 @@ import ReactAudioPlayer from "react-audio-player";
 
 import createAnimation from "./converter";
 import blinkData from "./blendDataBlink.json";
+import "./App.css"; // Import the CSS file
 
 import * as THREE from "three";
 import axios from "axios";
@@ -348,6 +349,19 @@ const STYLES = {
   },
   area2: { position: "absolute", top: "5px", right: "15px", zIndex: 500 },
   label: { color: "#777777", fontSize: "0.8em" },
+  loginSection: {
+    backgroundColor: "#222",
+    padding: "40px",
+    borderRadius: "15px",
+    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+    textAlign: "center",
+    maxWidth: "1100px",
+    margin: "auto",
+    color: "#fff",
+  },
+  mainbg:{
+    backgroundColor: "#00000000",
+  }
 };
 
 function App() {
@@ -356,7 +370,7 @@ function App() {
 
   const [speak, setSpeak] = useState(false);
   const [text, setText] = useState(
-    "My name is Arwen. I'm a virtual human who can speak whatever you type here along with realistic facial movements."
+    "I am in fever"
   );
   const [audioSource, setAudioSource] = useState(null);
   const [playing, setPlaying] = useState(false);
@@ -373,80 +387,92 @@ function App() {
     audioPlayer.current.audioEl.current.play();
     setPlaying(true);
   }
-  if(isAuthenticated){
-  return (
-    <div className="full">
-      meow
-      <div style={STYLES.area}>
-        <button onClick={logout}>Logout</button>
-        <textarea
-          rows={4}
-          type="text"
-          
-          style={STYLES.text}
-          value={text}
-          onChange={(e) => setText(e.target.value.substring(0, 200))}
-        />
-        <button onClick={() => setSpeak(true)} style={STYLES.speak}>
-          {" "}
-          {speak ? "Running..." : "Speak"}
-        </button>
-      </div>
-    
-      <ReactAudioPlayer
-        src={audioSource}
-        ref={audioPlayer}
-        onEnded={playerEnded}
-        onCanPlayThrough={playerReady}
-      />
+  if (isAuthenticated) {
+    return (
+      <body style={STYLES.mainbg}>
+        <div className="full">
+          <div style={STYLES.area}>
+            <button onClick={logout}>Logout</button>
+            <textarea
+              rows={4}
+              type="text"
+              style={STYLES.text}
+              value={text}
+              onChange={(e) => setText(e.target.value.substring(0, 200))}
+            />
+            <button onClick={() => setSpeak(true)} style={STYLES.speak}>
+              {" "}
+              {speak ? "Running..." : "Speak"}
+            </button>
+          </div>
 
-     {/* <Stats /> */}
-      <Canvas
-        dpr={2}
-        onCreated={(ctx) => {
-          ctx.gl.physicallyCorrectLights = true;
-        }}
-      >
-        <OrthographicCamera makeDefault zoom={1750} position={[0, 1.66, 1]} />
+          <ReactAudioPlayer
+            src={audioSource}
+            ref={audioPlayer}
+            onEnded={playerEnded}
+            onCanPlayThrough={playerReady}
+          />
 
-        {/* <OrbitControls
+          {/* <Stats /> */}
+          <Canvas
+            dpr={2}
+            onCreated={(ctx) => {
+              ctx.gl.physicallyCorrectLights = true;
+            }}
+          >
+            <OrthographicCamera
+              makeDefault
+              zoom={1750}
+              position={[0, 1.66, 1]}
+            />
+
+            {/* <OrbitControls
         target={[0, 1.65, 0]}
       /> */}
 
-        <Suspense fallback={null}>
-          <Environment
-            background={false}
-            files="/images/photo_studio_loft_hall_1k.hdr"
-          />
-        </Suspense>
+            <Suspense fallback={null}>
+              <Environment
+                background={false}
+                files="/images/photo_studio_loft_hall_1k.hdr"
+              />
+            </Suspense>
 
-        <Suspense fallback={null}>
-          <Bg />
-        </Suspense>
+            <Suspense fallback={null}>
+              <Bg />
+            </Suspense>
 
-        <Suspense fallback={null}>
-          <Avatar
-            avatar_url="/model.glb"
-            speak={speak}
-            setSpeak={setSpeak}
-            text={text}
-            setAudioSource={setAudioSource}
-            playing={playing}
-          />
-        </Suspense>
-      </Canvas>
-      <Loader dataInterpolation={(p) => `Loading... please wait`} />
-    </div>
-    );}
-
-    else{
-      return (
-        <div>
-        Hi Login Please
-        <button onClick={loginWithPopup}>Login Here</button>
+            <Suspense fallback={null}>
+              <Avatar
+                avatar_url="/model.glb"
+                speak={speak}
+                setSpeak={setSpeak}
+                text={text}
+                setAudioSource={setAudioSource}
+                playing={playing}
+              />
+            </Suspense>
+          </Canvas>
+          <Loader dataInterpolation={(p) => `Loading... please wait`} />
         </div>
-        );
-    }
+      </body>
+    );
+  } else {
+    return (
+      <body class="loginBG">
+        <div style={STYLES.loginSection} className="loginSection">
+          <h1 class="Headline">Hi, I am Sophia</h1>
+          <h2 class="Tagline">Sign Up to get your own AI Medic</h2>
+          <button
+            style={STYLES.loginButton}
+            className="loginButton"
+            onClick={loginWithPopup}
+          >
+            Get Started
+          </button>
+        </div>
+      </body>
+    );
+  }
 }
 
 function Bg() {
