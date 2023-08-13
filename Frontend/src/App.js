@@ -12,7 +12,8 @@ import {
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { useAuth0 } from "@auth0/auth0-react";
 import "./App.css"; // Import the CSS file
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMicrophone, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { LinearEncoding, sRGBEncoding } from "three/src/constants";
 import { LineBasicMaterial, MeshPhysicalMaterial, Vector2 } from "three";
 import ReactAudioPlayer from "react-audio-player";
@@ -372,10 +373,11 @@ const STYLES = {
     margin: "0px",
     width: "300px",
     padding: "5px",
-    background: "none",
+    background: "#00000026",
     color: "#ffffff",
     fontSize: "1.2em",
     border: "none",
+    borderRadius: "15px",
   },
   speak: {
     padding: "10px",
@@ -398,9 +400,9 @@ const STYLES = {
     margin: "auto",
     color: "#fff",
   },
-  mainbg:{
+  mainbg: {
     backgroundColor: "#222",
-  }
+  },
 };
 
 function App() {
@@ -423,7 +425,7 @@ function App() {
     setSpeak(false);
     setPlaying(false);
   }
-  
+
   // Player is read
   function playerReady(e) {
     audioPlayer.current.audioEl.current.play();
@@ -433,86 +435,106 @@ function App() {
   if (isAuthenticated) {
     return (
       <body style={STYLES.mainbg}>
-
-      <div className="full">
-        <div style={STYLES.area}>
-          <div style={STYLES.a1}>
-            <nav style={STYLES.navbar}>
-              <div style={STYLES.leftContent}>Hey, {user.given_name}!</div>
-              <div style={STYLES.rightContent}>
-                {isAuthenticated && (
-                  <button style={STYLES.logoutButton} onClick={logout}>
-                    Logout
-                  </button>
-                )}
+        <div className="full">
+          <div style={STYLES.area}>
+            <div style={STYLES.a1}>
+              <nav style={STYLES.navbar}>
+                <div style={STYLES.leftContent}>Hey, {user.given_name}!</div>
+                <div style={STYLES.rightContent}>
+                  {isAuthenticated && (
+                    <button style={STYLES.logoutButton} onClick={logout}>
+                      Logout
+                    </button>
+                  )}
+                </div>
+              </nav>
+            </div>
+            <div class="mainarea">
+              <textarea
+                rows={4}
+                type="text"
+                style={STYLES.text}
+                value={transcript}
+                onChange={(e) => setText(e.target.value.substring(0, 200))}
+              />
+              {/* <p>Microphone: {listening ? "on" : "off"}</p> */}
+              <div>
+                <button
+                  onClick={SpeechRecognition.startListening}
+                  class="startButton"
+                >
+                  <FontAwesomeIcon icon={faMicrophone} />
+                </button>
+                </div>
+                <div>
+                  
+                <button
+                  onClick={() => {
+                    setSpeak();
+                    SpeechRecognition.stopListening();
+                  }}
+                  class="sendButton"
+                >
+                  <FontAwesomeIcon icon={faPaperPlane} />
+                </button>
               </div>
-            </nav>
-          </div>
-          <textarea
-            rows={4}
-            type="text"
-            style={STYLES.text}
-            value={transcript}
-            onChange={(e) => setText(e.target.value.substring(0, 200))}
-          />
-        {/* <p>Microphone: {listening ? "on" : "off"}</p> */}
-          <button onClick={SpeechRecognition.startListening}>Start</button>
-          <button onClick={()=>{setSpeak();SpeechRecognition.stopListening();}}>Stop
-          </button>
-          {/* <button onClick={resetTranscript}>Reset</button> */}
-          {/* <button onClick={() => setSpeak(true)} style={STYLES.speak}> */}
+            </div>
+            {/* <button onClick={resetTranscript}>Reset</button> */}
+            {/* <button onClick={() => setSpeak(true)} style={STYLES.speak}> */}
             {/*  */}
             {/* {speak ? "Running..." : "Speak"} */}
-          {/* </button> */}
-          <button onClick={logout}>Logout</button>
-        
-        </div>
+            {/* </button> */}
+          </div>
 
-        <ReactAudioPlayer
-          src={audioSource}
-          ref={audioPlayer}
-          onEnded={playerEnded}
-          onCanPlayThrough={playerReady}
-        />
+          <ReactAudioPlayer
+            src={audioSource}
+            ref={audioPlayer}
+            onEnded={playerEnded}
+            onCanPlayThrough={playerReady}
+          />
 
-        {/* <Stats /> */}
-        <Canvas
-          dpr={2}
-          onCreated={(ctx) => {
-            ctx.gl.physicallyCorrectLights = true;
-          }}
-        >
-          <OrthographicCamera makeDefault zoom={1500} position={[0, 1.66, 1]} />
+          {/* <Stats /> */}
+          <Canvas
+            dpr={2}
+            onCreated={(ctx) => {
+              ctx.gl.physicallyCorrectLights = true;
+            }}
+          >
+            <OrthographicCamera
+              makeDefault
+              zoom={1500}
+              position={[0, 1.66, 1]}
+            />
 
-          {/* <OrbitControls
+            {/* <OrbitControls
         target={[0, 1.65, 0]}
       /> */}
 
-          <Suspense fallback={null}>
-            <Environment
-              background={false}
-              files="/images/photo_studio_loft_hall_1k.hdr"
-            />
-          </Suspense>
+            <Suspense fallback={null}>
+              <Environment
+                background={false}
+                files="/images/photo_studio_loft_hall_1k.hdr"
+              />
+            </Suspense>
 
-          <Suspense fallback={null}>
-            <Bg />
-          </Suspense>
+            <Suspense fallback={null}>
+              <Bg />
+            </Suspense>
 
-          <Suspense fallback={null}>
-            <Avatar
-              avatar_url="/model.glb"
-              speak={speak}
-              setSpeak={setSpeak}
-              text={text}
-              setAudioSource={setAudioSource}
-              playing={playing}
-            />
-          </Suspense>
-        </Canvas>
-        <Loader dataInterpolation={(p) => `Loading... please wait`} />
-      </div>
-        </body>
+            <Suspense fallback={null}>
+              <Avatar
+                avatar_url="/model.glb"
+                speak={speak}
+                setSpeak={setSpeak}
+                text={text}
+                setAudioSource={setAudioSource}
+                playing={playing}
+              />
+            </Suspense>
+          </Canvas>
+          <Loader dataInterpolation={(p) => `Loading... please wait`} />
+        </div>
+      </body>
     );
   } else {
     return (
