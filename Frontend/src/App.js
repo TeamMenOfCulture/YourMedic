@@ -12,8 +12,7 @@ import {
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { useAuth0 } from "@auth0/auth0-react";
 import "./App.css"; // Import the CSS file
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMicrophone, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+
 import { LinearEncoding, sRGBEncoding } from "three/src/constants";
 import { LineBasicMaterial, MeshPhysicalMaterial, Vector2 } from "three";
 import ReactAudioPlayer from "react-audio-player";
@@ -312,7 +311,6 @@ async function makeSpeech(text) {
   message.push({ role: "user", content: text });
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
-
     messages: message,
     temperature: 0.2,
     max_tokens: 100,
@@ -373,11 +371,10 @@ const STYLES = {
     margin: "0px",
     width: "300px",
     padding: "5px",
-    background: "#00000026",
+    background: "none",
     color: "#ffffff",
     fontSize: "1.2em",
     border: "none",
-    borderRadius: "15px",
   },
   speak: {
     padding: "10px",
@@ -393,6 +390,7 @@ const STYLES = {
   loginSection: {
     backgroundColor: "#222",
     padding: "40px",
+
     borderRadius: "15px",
     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
     textAlign: "center",
@@ -463,11 +461,10 @@ function App() {
                   onClick={SpeechRecognition.startListening}
                   class="startButton"
                 >
-                  <FontAwesomeIcon icon={faMicrophone} />
+                  TALK
                 </button>
-                </div>
-                <div>
-                  
+              </div>
+              <div>
                 <button
                   onClick={() => {
                     setSpeak();
@@ -475,7 +472,7 @@ function App() {
                   }}
                   class="sendButton"
                 >
-                  <FontAwesomeIcon icon={faPaperPlane} />
+                  SEND
                 </button>
               </div>
             </div>
@@ -517,19 +514,19 @@ function App() {
               />
             </Suspense>
 
-            <Suspense fallback={null}>
-              <Bg />
-            </Suspense>
+            <Suspense fallback={null}></Suspense>
 
             <Suspense fallback={null}>
+            
               <Avatar
                 avatar_url="/model.glb"
                 speak={speak}
                 setSpeak={setSpeak}
-                text={text}
+                text={transcript}
                 setAudioSource={setAudioSource}
                 playing={playing}
               />
+              
             </Suspense>
           </Canvas>
           <Loader dataInterpolation={(p) => `Loading... please wait`} />
@@ -540,8 +537,12 @@ function App() {
     return (
       <body class="loginBG">
         <div style={STYLES.loginSection} className="loginSection">
-          <h1 class="Headline">Hi, I am Sophia</h1>
-          <h2 class="Tagline">Sign Up to get your own AI Medic</h2>
+          <h1 class="Headline">
+            Your<span class="medic">Medic</span>
+          </h1>
+          <h2 class="Tagline">
+            Hi, I am Sophia. Sign Up to get me as your own AI Medic
+          </h2>
           <button
             style={STYLES.loginButton}
             className="loginButton"

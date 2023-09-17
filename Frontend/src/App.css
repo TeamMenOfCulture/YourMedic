@@ -44,7 +44,7 @@ transition: transform 0.3s, box-shadow 0.3s; /* Added transition */
 .Tagline{
   font-size: 20px;
   text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.451);
-  padding-bottom: 50px;
+  padding-bottom: 20px;
 }
 body{
   background-image: url("./login-bg.jpg"); /* URL to your image */
@@ -52,24 +52,11 @@ body{
   background-repeat: no-repeat;
   background-position: top;
 }
-
-.startButton{
-  width: 100px;
-  height: 100px;
+.medic{
+  color: rgb(0, 149, 255);
 }
 
-.sendButton{
-  width: 100px;
-  height: 100px;
-}
 
-.mainarea{
-  display: flex;
-  justify-items: center;
-  align-items: center;
-}
-
-/* Styles for the buttons */
 .startButton,
 .sendButton {
   width: 60px;
