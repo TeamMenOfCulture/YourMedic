@@ -14,6 +14,9 @@ const SpeechRecognitionComponent = (props) => {
     setIsListening,
     setTranscript,
     setRecognizer,
+    STYLES,
+    setText,
+    setSpeak
   } = props;
 
   useEffect(() => {
@@ -23,7 +26,7 @@ const SpeechRecognitionComponent = (props) => {
       "7d4c372990c24e7eb6bf68bff6f09ea0",
       "eastasia"
     );
-    speechConfig.speechRecognitionLanguage = "bn-IN";
+    speechConfig.speechRecognitionLanguage = "en-US";
     const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
 
     const speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
@@ -62,19 +65,41 @@ const SpeechRecognitionComponent = (props) => {
     // Reset the transcript to an empty string
     setTranscript("");
   };
-  console.log(transcript)
 
   return (
-    <div>
-      <button onClick={startListening} disabled={isListening}>
-        Start Listening
-      </button>
-      <button onClick={stopListening} disabled={!isListening}>
-        Stop Listening
-      </button>
-      <button onClick={resetTranscript}>Reset Transcript</button>
+    <div class="mainarea">
+      <textarea
+        rows={4}
+        type="text"
+        style={STYLES.text}
+        value={transcript}
+        onChange={(e) => setText(e.target.value.substring(0, 200))}
+      />
       <div>
-        <p>Transcript: {transcript}</p>
+        <button
+          onClick={startListening}
+          class="startButton"
+          disabled={isListening}
+        >
+          TALK
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            setSpeak();
+            stopListening();
+          }}
+          class="sendButton"
+          disabled={!isListening}
+        >
+          SEND
+        </button>
+      </div>
+      <div>
+        <button onClick={resetTranscript} class="resetButton">
+          Reset Transcript
+        </button>
       </div>
     </div>
   );

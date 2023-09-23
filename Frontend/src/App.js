@@ -304,7 +304,7 @@ const openai = new OpenAIApi(configuration);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 let initiateText =
-  "Suppose you are a great doctor and have most of medical knowledge and you can tell cure to people. Your name is Sophia. You can help them by your own. Your profession is of a doctor, you can't do any other things accept that. Don't let anyone know that you are an AI model.Wrap your answer in between 30 words";
+  "MISSION:You are a patient intake chatbot focusing on symptoms. Your mission is to ask questions to help a patient fully articulate their symptoms in a clear manner. Your chat transcript will ultimately be translated into chart notes.,RULES:Ask only one question at a time. Provide some context or clarification around the follow-up questions you ask. Do not converse with the patient. Try to avoid saying things like Thanks for confirming and those things. Also, Don't say all our symtoms at once. Try to avoid long sentences. Do not repeat my symtoms to me. CHARACTER:Try to be helpful and sympathetic to the patient. Your name is Disha.";
 let message = [{ role: "system", content: initiateText }];
 async function makeSpeech(text) {
   console.log(text);
@@ -328,6 +328,8 @@ async function makeSpeech(text) {
   text = completion.data.choices[0].message.content;
   //console.log("Tokens Used: " + completion);
   console.log(text);
+  
+  message.push({ role: "system", content: text });
 
   return axios.post(host + "/talk", { text });
 }
@@ -410,14 +412,9 @@ function App() {
 
   const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
   const audioPlayer = useRef();
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+
   const [speak, setSpeak] = useState(false);
-  const [text, setText] = useState(transcript);
+  const [text, setText] = useState(transcript1);
   const [audioSource, setAudioSource] = useState(null);
   const [playing, setPlaying] = useState(false);
 
@@ -450,35 +447,17 @@ function App() {
               </div>
             </nav>
           </div>
-          <div class="mainarea">
-            <textarea
-              rows={4}
-              type="text"
-              style={STYLES.text}
-              value={transcript}
-              onChange={(e) => setText(e.target.value.substring(0, 200))}
-            />
-            {/* <p>Microphone: {listening ? "on" : "off"}</p> */}
-            <div>
-              <button
-                onClick={SpeechRecognition.startListening}
-                class="startButton"
-              >
-                TALK
-              </button>
-            </div>
-            <div>
-              <button
-                onClick={() => {
-                  setSpeak();
-                  SpeechRecognition.stopListening();
-                }}
-                class="sendButton"
-              >
-                SEND
-              </button>
-            </div>
-          </div>
+          <SpeechRecognitionComponent
+            isListening={isListening}
+            transcript={transcript1}
+            recognizer={recognizer}
+            setIsListening={setIsListening}
+            setTranscript={setTranscript}
+            setRecognizer={setRecognizer}
+            STYLES={STYLES}
+            setText={setText}
+            setSpeak={setSpeak}
+          />
           {/* <button onClick={resetTranscript}>Reset</button> */}
           {/* <button onClick={() => setSpeak(true)} style={STYLES.speak}> */}
           {/*  */}
@@ -520,21 +499,13 @@ function App() {
               avatar_url="/model.glb"
               speak={speak}
               setSpeak={setSpeak}
-              text={transcript}
+              text={transcript1}
               setAudioSource={setAudioSource}
               playing={playing}
             />
           </Suspense>
         </Canvas>
         <Loader dataInterpolation={(p) => `Loading... please wait`} />
-        <SpeechRecognitionComponent
-          isListening={isListening}
-          transcript={transcript1}
-          recognizer={recognizer}
-          setIsListening={setIsListening}
-          setTranscript={setTranscript}
-          setRecognizer={setRecognizer}
-        />
       </div>
     );
   } else {
