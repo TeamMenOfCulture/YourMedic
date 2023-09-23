@@ -404,9 +404,9 @@ const STYLES = {
 };
 
 function App() {
-  const var1 = String(process.env.REACT_APP_AZURE_KEY);
-  const var2 = String(process.env.REACT_APP_AZURE_REGION);
-  console.log(var1, var2);
+  const [isListening, setIsListening] = useState(false);
+  const [transcript1, setTranscript] = useState("");
+  const [recognizer, setRecognizer] = useState(null);
 
   const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
   const audioPlayer = useRef();
@@ -527,7 +527,14 @@ function App() {
           </Suspense>
         </Canvas>
         <Loader dataInterpolation={(p) => `Loading... please wait`} />
-        <SpeechRecognitionComponent var1={var1} var2={var2} />
+        <SpeechRecognitionComponent
+          isListening={isListening}
+          transcript={transcript1}
+          recognizer={recognizer}
+          setIsListening={setIsListening}
+          setTranscript={setTranscript}
+          setRecognizer={setRecognizer}
+        />
       </div>
     );
   } else {
