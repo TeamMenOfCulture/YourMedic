@@ -23,7 +23,7 @@ import SpeechRecognition, {
 
 import createAnimation from "./converter";
 import blinkData from "./blendDataBlink.json";
-
+import SpeechRecognitionComponent from "./SpeechToTextComponent";
 import * as THREE from "three";
 import axios from "axios";
 
@@ -404,6 +404,10 @@ const STYLES = {
 };
 
 function App() {
+  const var1 = String(process.env.REACT_APP_AZURE_KEY);
+  const var2 = String(process.env.REACT_APP_AZURE_REGION);
+  console.log(var1, var2);
+
   const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
   const audioPlayer = useRef();
   const {
@@ -432,106 +436,99 @@ function App() {
   console.log();
   if (isAuthenticated) {
     return (
-      <body style={STYLES.mainbg}>
-        <div className="full">
-          <div style={STYLES.area}>
-            <div style={STYLES.a1}>
-              <nav style={STYLES.navbar}>
-                <div style={STYLES.leftContent}>Hey, {user.given_name}!</div>
-                <div style={STYLES.rightContent}>
-                  {isAuthenticated && (
-                    <button style={STYLES.logoutButton} onClick={logout}>
-                      Logout
-                    </button>
-                  )}
-                </div>
-              </nav>
-            </div>
-            <div class="mainarea">
-              <textarea
-                rows={4}
-                type="text"
-                style={STYLES.text}
-                value={transcript}
-                onChange={(e) => setText(e.target.value.substring(0, 200))}
-              />
-              {/* <p>Microphone: {listening ? "on" : "off"}</p> */}
-              <div>
-                <button
-                  onClick={SpeechRecognition.startListening}
-                  class="startButton"
-                >
-                  TALK
-                </button>
+      <div className="full">
+        <div style={STYLES.area}>
+          <div style={STYLES.a1}>
+            <nav style={STYLES.navbar}>
+              <div style={STYLES.leftContent}>Hey, {user.given_name}!</div>
+              <div style={STYLES.rightContent}>
+                {isAuthenticated && (
+                  <button style={STYLES.logoutButton} onClick={logout}>
+                    Logout
+                  </button>
+                )}
               </div>
-              <div>
-                <button
-                  onClick={() => {
-                    setSpeak();
-                    SpeechRecognition.stopListening();
-                  }}
-                  class="sendButton"
-                >
-                  SEND
-                </button>
-              </div>
-            </div>
-            {/* <button onClick={resetTranscript}>Reset</button> */}
-            {/* <button onClick={() => setSpeak(true)} style={STYLES.speak}> */}
-            {/*  */}
-            {/* {speak ? "Running..." : "Speak"} */}
-            {/* </button> */}
+            </nav>
           </div>
-
-          <ReactAudioPlayer
-            src={audioSource}
-            ref={audioPlayer}
-            onEnded={playerEnded}
-            onCanPlayThrough={playerReady}
-          />
-
-          {/* <Stats /> */}
-          <Canvas
-            dpr={2}
-            onCreated={(ctx) => {
-              ctx.gl.physicallyCorrectLights = true;
-            }}
-          >
-            <OrthographicCamera
-              makeDefault
-              zoom={1500}
-              position={[0, 1.66, 1]}
+          <div class="mainarea">
+            <textarea
+              rows={4}
+              type="text"
+              style={STYLES.text}
+              value={transcript}
+              onChange={(e) => setText(e.target.value.substring(0, 200))}
             />
+            {/* <p>Microphone: {listening ? "on" : "off"}</p> */}
+            <div>
+              <button
+                onClick={SpeechRecognition.startListening}
+                class="startButton"
+              >
+                TALK
+              </button>
+            </div>
+            <div>
+              <button
+                onClick={() => {
+                  setSpeak();
+                  SpeechRecognition.stopListening();
+                }}
+                class="sendButton"
+              >
+                SEND
+              </button>
+            </div>
+          </div>
+          {/* <button onClick={resetTranscript}>Reset</button> */}
+          {/* <button onClick={() => setSpeak(true)} style={STYLES.speak}> */}
+          {/*  */}
+          {/* {speak ? "Running..." : "Speak"} */}
+          {/* </button> */}
+        </div>
 
-            {/* <OrbitControls
+        <ReactAudioPlayer
+          src={audioSource}
+          ref={audioPlayer}
+          onEnded={playerEnded}
+          onCanPlayThrough={playerReady}
+        />
+
+        {/* <Stats /> */}
+        <Canvas
+          dpr={2}
+          onCreated={(ctx) => {
+            ctx.gl.physicallyCorrectLights = true;
+          }}
+        >
+          <OrthographicCamera makeDefault zoom={1500} position={[0, 1.66, 1]} />
+
+          {/* <OrbitControls
         target={[0, 1.65, 0]}
       /> */}
 
-            <Suspense fallback={null}>
-              <Environment
-                background={false}
-                files="/images/photo_studio_loft_hall_1k.hdr"
-              />
-            </Suspense>
+          <Suspense fallback={null}>
+            <Environment
+              background={false}
+              files="/images/photo_studio_loft_hall_1k.hdr"
+            />
+          </Suspense>
 
-            <Suspense fallback={null}></Suspense>
+          <Suspense fallback={null}></Suspense>
 
-            <Suspense fallback={null}>
-            
-              <Avatar
-                avatar_url="/model.glb"
-                speak={speak}
-                setSpeak={setSpeak}
-                text={transcript}
-                setAudioSource={setAudioSource}
-                playing={playing}
-              />
-              
-            </Suspense>
-          </Canvas>
-          <Loader dataInterpolation={(p) => `Loading... please wait`} />
-        </div>
-      </body>
+          <Suspense fallback={null}>
+            <Avatar
+              avatar_url="/model.glb"
+              speak={speak}
+              setSpeak={setSpeak}
+              text={transcript}
+              setAudioSource={setAudioSource}
+              playing={playing}
+            />
+          </Suspense>
+        </Canvas>
+        <Loader dataInterpolation={(p) => `Loading... please wait`} />
+        <SpeechRecognitionComponent var1={var1} var2={var2} />
+      </div>
     );
   } else {
     return (
