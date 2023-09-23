@@ -303,35 +303,53 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 //---------------------------------------------------------------------------------------------------------------------------------
-let initiateText =
-  "MISSION:You are a patient intake chatbot focusing on symptoms. Your mission is to ask questions to help a patient fully articulate their symptoms in a clear manner. Your chat transcript will ultimately be translated into chart notes.,RULES:Ask only one question at a time. Provide some context or clarification around the follow-up questions you ask. Do not converse with the patient. Try to avoid saying things like Thanks for confirming and those things. Also, Don't say all our symtoms at once. Try to avoid long sentences. Do not repeat my symtoms to me. CHARACTER:Try to be helpful and sympathetic to the patient. Your name is Disha.";
-let message = [{ role: "system", content: initiateText }];
 async function makeSpeech(text) {
   console.log(text);
-  message.push({ role: "user", content: text });
-  const completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: message,
-    temperature: 0.2,
-    max_tokens: 100,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-  });
+  let initiateText =
+    "MISSION:You are a patient intake chatbot focusing on symptoms. Your mission is to ask questions to help a patient fully articulate their symptoms in a clear manner. Your chat transcript will ultimately be translated into chart notes.,RULES:Ask only one question at a time. Provide some context or clarification around the follow-up questions you ask. Do not converse with the patient. Try to avoid saying things like Thanks for confirming and those things. Also, Don't say all our symtoms at once. Try to avoid long sentences. Do not repeat my symtoms to me. CHARACTER:Try to be helpful and sympathetic to the patient. Your name is Disha.";
+  let message = [{ role: "system", content: initiateText }];
 
-  //await openai.createCompletion({
-  //  model: "text-davinci-003",
-  //  prompt: initiateText+text+"\n",
-  //  max_tokens: 100,
-  //  temperature: 0.1,
-  //});
-  text = completion.data.choices[0].message.content;
-  //console.log("Tokens Used: " + completion);
-  console.log(text);
-  
-  message.push({ role: "system", content: text });
+  const subscriptionKey = "9f821a719e7c439c8fc2c19e5f337790"; // Replace with your subscription key
+  const region = "eastasia"; // Replace with your subscription region
+  const endpoint =
+    "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=en";
 
-  return axios.post(host + "/talk", { text });
+  const textToTranslate = [
+    {
+      Text: text,
+    },
+  ];
+
+  const headers = {
+    "Ocp-Apim-Subscription-Key": subscriptionKey,
+    "Ocp-Apim-Subscription-Region": region,
+    "Content-Type": "application/json",
+  };
+  try {
+    const translated = await axios.post(endpoint, textToTranslate, { headers });
+    console.log(translated)
+    const translatedText = translated.data[0].translations[0].text;
+    message.push({ role: "user", content: translatedText });
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: message,
+      temperature: 0.2,
+      max_tokens: 100,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+
+    text = completion.data.choices[0].message.content;
+    //console.log("Tokens Used: " + completion);
+    console.log(text);
+    const completionText = completion.data.choices[0].message.content;
+    message.push({ role: "system", content: text });
+
+    return axios.post(host + "/talk", { text });
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
 }
 
 const STYLES = {
