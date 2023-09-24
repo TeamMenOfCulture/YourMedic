@@ -9,14 +9,24 @@ import {
   useAnimations,
   OrthographicCamera,
 } from "@react-three/drei";
+import { initializeApp } from "firebase/app";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  setDoc
+} from "firebase/firestore";
+
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { useAuth0 } from "@auth0/auth0-react";
 import "./App.css"; // Import the CSS file
-import { transliterate } from 'https://cdn.jsdelivr.net/npm/transliteration@2.1.8/dist/browser/bundle.esm.min.js';
+import { transliterate } from "https://cdn.jsdelivr.net/npm/transliteration@2.1.8/dist/browser/bundle.esm.min.js";
 import { LinearEncoding, sRGBEncoding } from "three/src/constants";
 import { LineBasicMaterial, MeshPhysicalMaterial, Vector2 } from "three";
 import ReactAudioPlayer from "react-audio-player";
-
+import firebaseConfig from "./db";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -305,7 +315,7 @@ const openai = new OpenAIApi(configuration);
 //---------------------------------------------------------------------------------------------------------------------------------
 async function makeSpeech(text) {
   console.log(text);
-  console.log(transliterate(text))
+  console.log(transliterate(text));
   let initiateText =
     "MISSION:You are a patient intake chatbot focusing on symptoms. Your mission is to ask questions to help a patient fully articulate their symptoms in a clear manner. Your chat transcript will ultimately be translated into chart notes.,RULES:Ask only one question at a time. Provide some context or clarification around the follow-up questions you ask. Do not converse with the patient. Try to avoid saying things like Thanks for confirming and those things. Also, Don't say all our symtoms at once. Try to avoid long sentences. Do not repeat my symtoms to me. CHARACTER:Try to be helpful and sympathetic to the patient. Your name is Disha.";
   let message = [{ role: "system", content: initiateText }];
@@ -328,7 +338,7 @@ async function makeSpeech(text) {
   };
   try {
     const translated = await axios.post(endpoint, textToTranslate, { headers });
-    console.log(translated)
+    console.log(translated);
     const translatedText = translated.data[0].translations[0].text;
     message.push({ role: "user", content: text });
     const completion = await openai.createChatCompletion({
@@ -340,11 +350,13 @@ async function makeSpeech(text) {
       frequency_penalty: 0,
       presence_penalty: 0,
     });
-    
+
     text = completion.data.choices[0].message.content;
     //console.log("Tokens Used: " + completion);
     console.log(text);
-    const translated2 = await axios.post(endpoint, textToTranslate, { headers });
+    const translated2 = await axios.post(endpoint, textToTranslate, {
+      headers,
+    });
     const completionText = completion.data.choices[0].message.content;
     message.push({ role: "system", content: text });
 
@@ -453,6 +465,49 @@ function App() {
   }
   console.log();
   if (isAuthenticated) {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const collectionName = "DoctorDat1";
+    const checkCollection = async () => {
+      const collectionRef = collection(db, collectionName);
+
+      try {
+        const querySnapshot = await getDocs(collectionRef);
+
+        if (querySnapshot.empty) {
+          // The collection doesn't exist, so create it
+          console.log(
+            `Collection "${collectionName}" does not exist. Creating it now...`
+          );
+          await addDoc(collectionRef, { mew: "pew" }); // You can add initial data if needed
+        } else {
+          console.log(`Collection "${collectionName}" exists.`);
+          const documentName = "Moew1";
+          const documentRef = doc(db, collectionName, documentName);
+
+          // Check if the document exists
+          const documentSnapshot = await getDocs(documentRef);
+
+          if (documentSnapshot.empty) {
+            // The document doesn't exist, so create it with specific data
+            console.log(
+              `Document "${documentName}" does not exist. Creating it now...`
+            );
+            await setDoc(documentRef, {"Hi":"UG"});
+          } else {
+            console.log(`Document "${documentName}" already exists.`);
+          }
+        }
+      } catch (error) {
+        console.error(
+          `Error checking/creating collection "${collectionName}":`,
+          error
+        );
+      }
+    };
+
+    checkCollection();
+
     return (
       <div className="full">
         <div style={STYLES.area}>
