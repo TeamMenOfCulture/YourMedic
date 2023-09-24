@@ -12,7 +12,7 @@ import {
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
 import { useAuth0 } from "@auth0/auth0-react";
 import "./App.css"; // Import the CSS file
-
+import { transliterate } from 'https://cdn.jsdelivr.net/npm/transliteration@2.1.8/dist/browser/bundle.esm.min.js';
 import { LinearEncoding, sRGBEncoding } from "three/src/constants";
 import { LineBasicMaterial, MeshPhysicalMaterial, Vector2 } from "three";
 import ReactAudioPlayer from "react-audio-player";
@@ -305,6 +305,7 @@ const openai = new OpenAIApi(configuration);
 //---------------------------------------------------------------------------------------------------------------------------------
 async function makeSpeech(text) {
   console.log(text);
+  console.log(transliterate(text))
   let initiateText =
     "MISSION:You are a patient intake chatbot focusing on symptoms. Your mission is to ask questions to help a patient fully articulate their symptoms in a clear manner. Your chat transcript will ultimately be translated into chart notes.,RULES:Ask only one question at a time. Provide some context or clarification around the follow-up questions you ask. Do not converse with the patient. Try to avoid saying things like Thanks for confirming and those things. Also, Don't say all our symtoms at once. Try to avoid long sentences. Do not repeat my symtoms to me. CHARACTER:Try to be helpful and sympathetic to the patient. Your name is Disha.";
   let message = [{ role: "system", content: initiateText }];
@@ -329,26 +330,28 @@ async function makeSpeech(text) {
     const translated = await axios.post(endpoint, textToTranslate, { headers });
     console.log(translated)
     const translatedText = translated.data[0].translations[0].text;
-    message.push({ role: "user", content: translatedText });
+    message.push({ role: "user", content: text });
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: message,
       temperature: 0.2,
-      max_tokens: 100,
+      max_tokens: 200,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
     });
-
+    
     text = completion.data.choices[0].message.content;
     //console.log("Tokens Used: " + completion);
     console.log(text);
+    const translated2 = await axios.post(endpoint, textToTranslate, { headers });
     const completionText = completion.data.choices[0].message.content;
     message.push({ role: "system", content: text });
 
     return axios.post(host + "/talk", { text });
   } catch (error) {
     console.error("An error occurred:", error);
+    return error;
   }
 }
 

@@ -26,7 +26,7 @@ const SpeechRecognitionComponent = (props) => {
       "7d4c372990c24e7eb6bf68bff6f09ea0",
       "eastasia"
     );
-    speechConfig.speechRecognitionLanguage = "bn-IN";
+    speechConfig.speechRecognitionLanguage = "hi-IN";
     const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
 
     const speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
