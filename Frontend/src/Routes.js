@@ -5,6 +5,7 @@ import ButtonPage from "./link";
 import App from "./App";
 import ImageUploader from "./upload";
 import PatientReport from "./report";
+import GeneratePasskey from "./generatepasskeu";
 
 const IndexComponent = () => {
   return (
@@ -15,6 +16,7 @@ const IndexComponent = () => {
         <Route path="/buttons" element={<ButtonPage />} />
         <Route path="/upload" element={<ImageUploader />} />
         <Route path="/report" element={<PatientReport />} />
+        <Route path="/passkey" element={<GeneratePasskey />} />
       </Routes>
     </BrowserRouter>
   );

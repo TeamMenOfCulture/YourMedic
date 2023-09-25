@@ -2,6 +2,7 @@
   "name": "ttt",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3000",
   "dependencies": {
     "@auth0/auth0-react": "^2.2.0",
     "@azure/cognitiveservices-computervision": "^8.2.0",
@@ -33,6 +34,7 @@
     "react-router-dom": "^6.16.0",
     "react-scripts": "5.0.1",
     "react-speech-recognition": "^3.10.0",
+    "react-uploader": "^3.43.0",
     "rsuite": "^5.37.4",
     "three": "^0.156.1",
     "uuid": "^9.0.1",
