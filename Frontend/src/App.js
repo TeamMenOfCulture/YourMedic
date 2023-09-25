@@ -561,10 +561,10 @@ function App() {
       <body class="loginBG">
         <div style={STYLES.loginSection} className="loginSection">
           <h1 class="Headline">
-            Your<span class="medic">Medic</span>
+            Aarogya<span class="medic">Disha</span>
           </h1>
           <h2 class="Tagline">
-            Hi, I am Sophia. Sign Up to get me as your own AI Medic
+            Hi, I am Disha. Sign Up to get me as your own medical assistant
           </h2>
           <button
             style={STYLES.loginButton}
