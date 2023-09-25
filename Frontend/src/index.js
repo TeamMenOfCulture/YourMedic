@@ -3,7 +3,8 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import {Auth0Provider} from '@auth0/auth0-react';
+import { Auth0Provider } from "@auth0/auth0-react";
+import IndexComponent from "./Routes";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -12,7 +13,7 @@ ReactDOM.render(
       clientId="hehsIrOMgX8mwSfTObnmyDlZP2GM1Ohb"
       redirecturi={window.location.origin}
     >
-      <App />
+      <IndexComponent />
     </Auth0Provider>
   </React.StrictMode>,
   document.getElementById("root")

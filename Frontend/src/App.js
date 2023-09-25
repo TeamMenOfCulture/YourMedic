@@ -9,7 +9,9 @@ import {
   useAnimations,
   OrthographicCamera,
 } from "@react-three/drei";
+
 import { initializeApp } from "firebase/app";
+import DummyComponent from "./dummyComponent";
 import {
   getFirestore,
   collection,
@@ -28,7 +30,7 @@ import { transliterate } from "https://cdn.jsdelivr.net/npm/transliteration@2.1.
 import { LinearEncoding, sRGBEncoding } from "three/src/constants";
 import { LineBasicMaterial, MeshPhysicalMaterial, Vector2 } from "three";
 import ReactAudioPlayer from "react-audio-player";
-import firebaseConfig from "./db";
+import {firebaseConfig} from "./db";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -225,7 +227,7 @@ function Avatar({
 
     // runCompletion();
 
-    makeSpeech(text, user,setTranscript)
+    makeSpeech(text, user, setTranscript)
       .then((response) => {
         let { blendData, filename } = response.data;
 
@@ -317,7 +319,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 //---------------------------------------------------------------------------------------------------------------------------------
-async function makeSpeech(text, user,setTranscript) {
+async function makeSpeech(text, user, setTranscript) {
   console.log(text);
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
@@ -371,7 +373,7 @@ async function makeSpeech(text, user,setTranscript) {
     await updateDoc(userDocRef, { ChatHistory: chatHistory });
     // const completionText = completion.data.choices[0].message.content;
     message.push({ role: "system", content: text });
-    setTranscript("")
+    setTranscript("");
     return axios.post(host + "/talk", { text });
   } catch (error) {
     console.error("An error occurred:", error);
