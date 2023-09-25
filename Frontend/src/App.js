@@ -18,6 +18,7 @@ import {
   doc,
   setDoc,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
@@ -50,6 +51,7 @@ function Avatar({
   text,
   setAudioSource,
   playing,
+  user,
 }) {
   let gltf = useGLTF(avatar_url);
   let morphTargetDictionaryBody = null;
@@ -222,7 +224,7 @@ function Avatar({
 
     // runCompletion();
 
-    makeSpeech(text)
+    makeSpeech(text, user)
       .then((response) => {
         let { blendData, filename } = response.data;
 
@@ -314,34 +316,42 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 //---------------------------------------------------------------------------------------------------------------------------------
-async function makeSpeech(text) {
+async function makeSpeech(text, user) {
   console.log(text);
-  console.log(transliterate(text));
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const userEmail = user.email;
+  const userDocRef = doc(db, "PatientData", userEmail);
   let initiateText =
     "MISSION:You are a patient intake chatbot focusing on symptoms. Your mission is to ask questions to help a patient fully articulate their symptoms in a clear manner. Your chat transcript will ultimately be translated into chart notes.,RULES:Ask only one question at a time. Provide some context or clarification around the follow-up questions you ask. Do not converse with the patient. Try to avoid saying things like Thanks for confirming and those things. Also, Don't say all our symtoms at once. Try to avoid long sentences. Do not repeat my symtoms to me. CHARACTER:Try to be helpful and sympathetic to the patient. Your name is Disha.";
   let message = [{ role: "system", content: initiateText }];
-
-  const subscriptionKey = "9f821a719e7c439c8fc2c19e5f337790"; // Replace with your subscription key
-  const region = "eastasia"; // Replace with your subscription region
-  const endpoint =
-    "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=en";
-
-  const textToTranslate = [
-    {
-      Text: text,
-    },
-  ];
-
-  const headers = {
-    "Ocp-Apim-Subscription-Key": subscriptionKey,
-    "Ocp-Apim-Subscription-Region": region,
-    "Content-Type": "application/json",
-  };
+  message.push({ role: "user", content: "Name: " + user.given_name });
+  message.push({ role: "user", content: text });
   try {
-    const translated = await axios.post(endpoint, textToTranslate, { headers });
-    console.log(translated);
-    const translatedText = translated.data[0].translations[0].text;
-    message.push({ role: "user", content: text });
+    const docSnap = await getDoc(userDocRef);
+
+    if (!docSnap.exists()) {
+      // If the document doesn't exist, create it with the initial array
+
+      await setDoc(userDocRef, {
+        ChatHistory: message,
+      });
+    } else {
+      // If the document exists, append the new object to the 'ChatHistory' array
+      const chatHistory = docSnap.data().ChatHistory || [];
+      chatHistory.push({ role: "user", content: text });
+
+      await updateDoc(userDocRef, { ChatHistory: chatHistory });
+
+      console.log("Document successfully updated! ", chatHistory);
+    }
+  } catch (error) {
+    console.error("Error updating/creating document:", error);
+  }
+
+  console.log(transliterate(text));
+
+  try {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: message,
@@ -353,14 +363,13 @@ async function makeSpeech(text) {
     });
 
     text = completion.data.choices[0].message.content;
-    //console.log("Tokens Used: " + completion);
     console.log(text);
-    const translated2 = await axios.post(endpoint, textToTranslate, {
-      headers,
-    });
-    const completionText = completion.data.choices[0].message.content;
+    const docSnap = await getDoc(userDocRef);
+    const chatHistory = docSnap.data().ChatHistory || [];
+    chatHistory.push({ role: "system", content: text });
+    await updateDoc(userDocRef, { ChatHistory: chatHistory });
+    // const completionText = completion.data.choices[0].message.content;
     message.push({ role: "system", content: text });
-
     return axios.post(host + "/talk", { text });
   } catch (error) {
     console.error("An error occurred:", error);
@@ -466,26 +475,7 @@ function App() {
   }
   console.log();
   if (isAuthenticated) {
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const collectionName = "user";
-    const checkCollection = async () => {
-      const collectionRef = collection(db, collectionName);
-
-      try {
-        const userJson = {
-          email: user.email !== undefined ? user.email+"afdjagf" : "N/A",
-        };
-        const docref = doc(db, "user", user.email);
-        await updateDoc(docref, userJson);
-        console.log("Works");
-      } catch (e) {
-        console.log("mew");
-      }
-    };
-
-    checkCollection();
-
+    console.log(user);
     return (
       <div className="full">
         <div style={STYLES.area}>
@@ -556,6 +546,7 @@ function App() {
               text={transcript1}
               setAudioSource={setAudioSource}
               playing={playing}
+              user={user}
             />
           </Suspense>
         </Canvas>
