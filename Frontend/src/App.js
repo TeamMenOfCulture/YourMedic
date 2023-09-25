@@ -52,6 +52,7 @@ function Avatar({
   setAudioSource,
   playing,
   user,
+  setTranscript,
 }) {
   let gltf = useGLTF(avatar_url);
   let morphTargetDictionaryBody = null;
@@ -224,7 +225,7 @@ function Avatar({
 
     // runCompletion();
 
-    makeSpeech(text, user)
+    makeSpeech(text, user,setTranscript)
       .then((response) => {
         let { blendData, filename } = response.data;
 
@@ -316,7 +317,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 //---------------------------------------------------------------------------------------------------------------------------------
-async function makeSpeech(text, user) {
+async function makeSpeech(text, user,setTranscript) {
   console.log(text);
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
@@ -370,6 +371,7 @@ async function makeSpeech(text, user) {
     await updateDoc(userDocRef, { ChatHistory: chatHistory });
     // const completionText = completion.data.choices[0].message.content;
     message.push({ role: "system", content: text });
+    setTranscript("")
     return axios.post(host + "/talk", { text });
   } catch (error) {
     console.error("An error occurred:", error);
@@ -547,6 +549,7 @@ function App() {
               setAudioSource={setAudioSource}
               playing={playing}
               user={user}
+              setTranscript={setTranscript}
             />
           </Suspense>
         </Canvas>

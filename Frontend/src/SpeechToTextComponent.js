@@ -86,9 +86,10 @@ const SpeechRecognitionComponent = (props) => {
       </div>
       <div>
         <button
-          onClick={() => {
-            setSpeak();
-            stopListening();
+          onClick={async () => {
+            await stopListening();
+            await setSpeak();
+        
           }}
           class="sendButton"
           disabled={!isListening}
@@ -96,11 +97,7 @@ const SpeechRecognitionComponent = (props) => {
           SEND
         </button>
       </div>
-      <div>
-        <button onClick={resetTranscript} class="resetButton">
-          Reset Transcript
-        </button>
-      </div>
+      
     </div>
   );
 };
