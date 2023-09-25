@@ -30,7 +30,7 @@ import { transliterate } from "https://cdn.jsdelivr.net/npm/transliteration@2.1.
 import { LinearEncoding, sRGBEncoding } from "three/src/constants";
 import { LineBasicMaterial, MeshPhysicalMaterial, Vector2 } from "three";
 import ReactAudioPlayer from "react-audio-player";
-import {firebaseConfig} from "./db";
+import { firebaseConfig } from "./db";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";

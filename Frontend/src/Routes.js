@@ -4,6 +4,7 @@ import DummyComponent from "./dummyComponent";
 import ButtonPage from "./link";
 import App from "./App";
 import ImageUploader from "./upload";
+import PatientReport from "./report";
 
 const IndexComponent = () => {
   return (
@@ -13,6 +14,7 @@ const IndexComponent = () => {
         <Route path="/" element={<App />} />
         <Route path="/buttons" element={<ButtonPage />} />
         <Route path="/upload" element={<ImageUploader />} />
+        <Route path="/report" element={<PatientReport />} />
       </Routes>
     </BrowserRouter>
   );
