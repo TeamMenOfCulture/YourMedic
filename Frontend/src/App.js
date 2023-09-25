@@ -16,7 +16,8 @@ import {
   getDocs,
   addDoc,
   doc,
-  setDoc
+  setDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
@@ -467,42 +468,19 @@ function App() {
   if (isAuthenticated) {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const collectionName = "DoctorDat1";
+    const collectionName = "user";
     const checkCollection = async () => {
       const collectionRef = collection(db, collectionName);
 
       try {
-        const querySnapshot = await getDocs(collectionRef);
-
-        if (querySnapshot.empty) {
-          // The collection doesn't exist, so create it
-          console.log(
-            `Collection "${collectionName}" does not exist. Creating it now...`
-          );
-          await addDoc(collectionRef, { mew: "pew" }); // You can add initial data if needed
-        } else {
-          console.log(`Collection "${collectionName}" exists.`);
-          const documentName = "Moew1";
-          const documentRef = doc(db, collectionName, documentName);
-
-          // Check if the document exists
-          const documentSnapshot = await getDocs(documentRef);
-
-          if (documentSnapshot.empty) {
-            // The document doesn't exist, so create it with specific data
-            console.log(
-              `Document "${documentName}" does not exist. Creating it now...`
-            );
-            await setDoc(documentRef, {"Hi":"UG"});
-          } else {
-            console.log(`Document "${documentName}" already exists.`);
-          }
-        }
-      } catch (error) {
-        console.error(
-          `Error checking/creating collection "${collectionName}":`,
-          error
-        );
+        const userJson = {
+          email: user.email !== undefined ? user.email+"afdjagf" : "N/A",
+        };
+        const docref = doc(db, "user", user.email);
+        await updateDoc(docref, userJson);
+        console.log("Works");
+      } catch (e) {
+        console.log("mew");
       }
     };
 
