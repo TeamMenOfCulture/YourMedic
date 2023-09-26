@@ -6,6 +6,7 @@ import App from "./App";
 import ImageUploader from "./upload";
 import  PatientReport from "./report";
 import  LabTests from "./prescription";
+import  getYourData from "./getYourData";
 
 const IndexComponent = () => {
   return (
@@ -17,6 +18,7 @@ const IndexComponent = () => {
         <Route path="/upload" element={<ImageUploader />} />
         <Route path="/diagnosis" element={<PatientReport />} />
         <Route path="/report" element={< LabTests />} />
+        <Route path="/getYourData" element={< getYourData />} />
       </Routes>
     </BrowserRouter>
   );
