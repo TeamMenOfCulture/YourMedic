@@ -12,6 +12,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { firebaseConfig } from "./db";
+
 import { useAuth0 } from "@auth0/auth0-react";
 const { Configuration, OpenAIApi } = require("openai");
  

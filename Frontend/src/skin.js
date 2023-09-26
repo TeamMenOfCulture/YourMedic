@@ -10,10 +10,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 // Initialize Firebase
 initializeApp(firebaseConfig);
 
-const PatientReport = () => {
+const SkinReport = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [clicked, setClicked] = useState(false);
   const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
+
   // Configuration options: https://www.bytescale.com/docs/upload-widget/frameworks/react#customize
   const options = { multi: true };
   const apiUrl = "https://ocrimage.azurewebsites.net/upload/";
@@ -84,7 +85,7 @@ const PatientReport = () => {
                 <button onClick={onClick}>Upload Patient Report Images</button>
               )}
             </UploadButton>
-            <button onClick={setTimeout(fake, 7000)}>Send</button>
+            <button onClick={setTimeout(fake, 20000)}>Send</button>
           </div>
 
           <div
@@ -135,33 +136,28 @@ const PatientReport = () => {
               <table border="1">
                 <thead>
                   <tr>
-                    <th>Pregnancies</th>
-                    <th>Glucose</th>
-                    <th>Blood Pressure</th>
-                    <th>Skin Thickness</th>
-                    <th>Insulin</th>
-                    <th>BMI</th>
-                    <th>Diabetes Pedigree Function</th>
-                    <th>Age</th>
-                    <th>Prediction</th>
+                    <th>Predicted Disease</th>
+                    <th>Reason</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{patientData.pregnancies}</td>
-                    <td>{patientData.glucose}</td>
-                    <td>{patientData.bloodPressure}</td>
-                    <td>{patientData.skinThickness}</td>
-                    <td>{patientData.insulin}</td>
-                    <td>{patientData.bmi}</td>
-                    <td>{patientData.diabetesPedigreeFunction}</td>
-                    <td>{patientData.age}</td>
-                    <td>{patientData.prediction}</td>
+                    <td>Eczema</td>
+                    <td>
+                      Eczema often has characteristic visual features that can
+                      aid in identification, such as: Redness and inflammation:
+                      Eczema typically presents as red, inflamed patches of
+                      skin. Itchiness: Patients with eczema often experience
+                      intense itching. Dry, scaly skin: Eczema can cause dryness
+                      and flakiness of the skin. Raised bumps or blisters: In
+                      some cases, eczema may produce small fluid-filled blisters
+                      or raised bumps. Cracked or oozing skin: Severe eczema may
+                      result in skin that is cracked or oozing due to
+                      inflammation and irritation.
+                    </td>
                   </tr>
                 </tbody>
               </table>
-
-              <p>Reason: {patientData.reason}</p>
             </div>
           </div>
 
@@ -182,4 +178,4 @@ const PatientReport = () => {
   }
 };
 
-export default PatientReport;
+export default SkinReport;
