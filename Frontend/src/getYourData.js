@@ -14,8 +14,10 @@ import {
 import { firebaseConfig } from "./db";
 import { useAuth0 } from "@auth0/auth0-react";
 const { Configuration, OpenAIApi } = require("openai");
-function PatientReport() {
-  const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
+
+
+const GetYourData = () => {
+    const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
   const containerStyle = {
     fontFamily: "Arial, sans-serif",
     backgroundColor: "#f0f0f0",
@@ -273,6 +275,6 @@ Your report should follow this format:\
       </div>
     </div>
   );
-}
+};
 
-export default PatientReport;
+export default GetYourData;
