@@ -51,7 +51,7 @@ const PrescriptionDetectionDashboard = () => {
         const downloadURL = await getDownloadURL(storageRef);
         console.log("Upload Done")
         console.log(downloadURL);
-        // ---------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------------------------
         let text ="SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM "
         function downloadTextFile() {
           var blob = new Blob([text], { type: "text/plain" });
