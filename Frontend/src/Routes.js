@@ -4,7 +4,8 @@ import DummyComponent from "./dummyComponent";
 import ButtonPage from "./link";
 import App from "./App";
 import ImageUploader from "./upload";
-import PatientReport from "./report";
+import  PatientReport from "./report";
+import  LabTests from "./prescription";
 
 const IndexComponent = () => {
   return (
@@ -14,7 +15,8 @@ const IndexComponent = () => {
         <Route path="/" element={<App />} />
         <Route path="/buttons" element={<ButtonPage />} />
         <Route path="/upload" element={<ImageUploader />} />
-        <Route path="/report" element={<PatientReport />} />
+        <Route path="/diagnosis" element={<PatientReport />} />
+        <Route path="/report" element={< LabTests />} />
       </Routes>
     </BrowserRouter>
   );
