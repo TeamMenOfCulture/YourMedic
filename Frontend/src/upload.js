@@ -24,43 +24,32 @@ const ImageUploader = () => {
 
   const formData = new FormData();
   formData.append("file", file);
-  setURL(
-    "https://upcdn.io/12a1ybz/raw/uploads/2023/09/25/4m991S4HK9-friendly.png"
-  );
-  formData.append(
-    "image_url",
-    "https://upcdn.io/12a1ybz/raw/uploads/2023/09/25/4m991S4HK9-friendly.png"
-  );
-  axios({
-    method: "post",
-    url: apiUrl,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "multipart/form-data",
-      "Access-Control-Allow-Origin": "*",
-    },
-    data: formData,
-  })
-    .then((response) => {
-      // Handle the response here
-      console.log(response.data);
+  formData.append("image_url", url);
+  if (url !== "") {
+    axios({
+      method: "post",
+      url: apiUrl,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+      data: formData,
     })
-    .catch((error) => {
-      // Handle errors here
-      console.error(error);
-    });
-  const doo = async (files) => {
-    await setURL(files.map((x) => x.fileUrl).join("\n"));
-    console.log(url);
-  };
+      .then((response) => {
+        // Handle the response here
+        console.log(response.data);
+      })
+      .catch((error) => {
+        // Handle errors here
+        console.error(error);
+      });
+  }
 
   return (
     <UploadButton
       uploader={uploader}
       options={options}
-      onComplete={(files) => {
-        doo(files);
-      }}
+      onComplete={(files) => setURL(files.map((x) => x.fileUrl).join("\n"))}
     >
       {({ onClick }) => <button onClick={onClick}>Upload a file...</button>}
     </UploadButton>
