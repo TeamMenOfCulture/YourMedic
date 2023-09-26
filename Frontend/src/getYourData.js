@@ -14,7 +14,7 @@ import {
 import { firebaseConfig } from "./db";
 import { useAuth0 } from "@auth0/auth0-react";
 const { Configuration, OpenAIApi } = require("openai");
-
+ 
 
 const GetYourData = () => {
     const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
