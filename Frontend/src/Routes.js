@@ -9,12 +9,13 @@ import LabTests from "./prescription";
 import GetYourData from "./getYourData";
 import SkinReport from "./skin";
 import Prescription from "./prescript";
+import YourComponent from "./dashboard";
 const IndexComponent = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/speech" element={<DummyComponent />} />
-        <Route path="/" element={<App />} />
+        <Route path="/disha" element={<App />} />
         <Route path="/buttons" element={<ButtonPage />} />
         <Route path="/upload" element={<ImageUploader />} />
         <Route path="/diagnosis" element={<PatientReport />} />
@@ -22,6 +23,7 @@ const IndexComponent = () => {
         <Route path="/getYourData" element={<GetYourData />} />
         <Route path="/skin" element={<SkinReport />} />
         <Route path="/prescription" element={<Prescription />} />
+        <Route path="/" element={<YourComponent />} />
       </Routes>
     </BrowserRouter>
   );
