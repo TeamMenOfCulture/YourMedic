@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { initializeApp } from "firebase/app";
 import DummyComponent from "./dummyComponent";
+import curlCommandExport from "./curl";
+
 import {
   getFirestore,
   collection,
@@ -52,22 +54,30 @@ const PrescriptionDetectionDashboard = () => {
         console.log("Upload Done")
         console.log(downloadURL);
         // ---------------------------------------------------------------------------------------------------------------------
-        let text ="SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM "
-        function downloadTextFile() {
-          var blob = new Blob([text], { type: "text/plain" });
-          var url = URL.createObjectURL(blob);
 
-          var a = document.createElement("a");
-          a.href = url;
-          a.download = "Prescription.txt";
+        await curlCommandExport(downloadURL)
 
-          a.click();
 
-          // Clean up
-          URL.revokeObjectURL(url);
-        }
 
-        await setTimeout(downloadTextFile, 5000);
+
+
+
+        // let text ="SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM "
+        // function downloadTextFile() {
+        //   var blob = new Blob([text], { type: "text/plain" });
+        //   var url = URL.createObjectURL(blob);
+
+        //   var a = document.createElement("a");
+        //   a.href = url;
+        //   a.download = "Prescription.txt";
+
+        //   a.click();
+
+        //   // Clean up
+        //   URL.revokeObjectURL(url);
+        // }
+
+        // await setTimeout(downloadTextFile, 5000);
 
 
 

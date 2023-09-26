@@ -1,6 +1,7 @@
 import React from "react";
 import { initializeApp } from "firebase/app";
 import DummyComponent from "./dummyComponent";
+// import curlCommandExport from "./curl";
 import {
   getFirestore,
   collection,
