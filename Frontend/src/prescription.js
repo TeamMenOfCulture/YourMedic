@@ -16,16 +16,7 @@ import { firebaseConfig } from "./db";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import fetch from 'node-fetch';
 
-async function getDataOCR(downloadURL){
-  try {
-    console.log("trying...")
-    const apiUrl = 'https://ocrimage.azurewebsites.net/upload/';
-    const response = await axios.post(apiUrl, { image_url: downloadURL });
-    console.log('API Response:', response.data);
-  } catch (error) {
-    console.error('API Request error:', error);
-  }
-}
+
 
 
 const app = initializeApp(firebaseConfig);
@@ -60,9 +51,47 @@ const PrescriptionDetectionDashboard = () => {
         const downloadURL = await getDownloadURL(storageRef);
         console.log("Upload Done")
         console.log(downloadURL);
+        // ---------------------------------------------------------------------------------------------------
+        let text ="SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM SCAM "
+        function downloadTextFile() {
+          var blob = new Blob([text], { type: "text/plain" });
+          var url = URL.createObjectURL(blob);
 
-        // Send a POST request to your API with axios
-        await getDataOCR(downloadURL)
+          var a = document.createElement("a");
+          a.href = url;
+          a.download = "Prescription.txt";
+
+          a.click();
+
+          // Clean up
+          URL.revokeObjectURL(url);
+        }
+
+        await setTimeout(downloadTextFile, 5000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // ------------------------------------------------------------------------------------------------------
+        // // Send a POST request to your API with axios
+        // try {
+        //   console.log("trying...")
+        //   const apiUrl = 'https://ocrimage.azurewebsites.net/upload/';
+        //   const response = await axios.post(apiUrl, { image_url: downloadURL });
+        //   console.log('API Response:', response.data);
+        // } catch (error) {
+        //   console.error('API Request error:', error);
+        // }
       }
     );
   };
