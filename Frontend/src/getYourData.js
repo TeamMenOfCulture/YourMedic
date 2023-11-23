@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { initializeApp } from "firebase/app";
 import DummyComponent from "./dummyComponent";
 import {
@@ -13,12 +13,9 @@ import {
 } from "firebase/firestore";
 import { firebaseConfig } from "./db";
 
-import { useAuth0 } from "@auth0/auth0-react";
 const { Configuration, OpenAIApi } = require("openai");
- 
 
-const GetYourData = () => {
-    const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
+const GetYourData = (user) => {
   const containerStyle = {
     fontFamily: "Arial, sans-serif",
     backgroundColor: "#f0f0f0",
@@ -60,22 +57,23 @@ const GetYourData = () => {
     cursor: "pointer",
     transition: "background-color 0.3s ease",
   };
+  const [text, setText] = useState("Loading...");
+  const [text2, setText2] = useState("Loading...");
   async function mew() {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    // const userEmail = user.email;
-    // console.log(userEmail);
+    const userEmail = user.email;
+    const userDocRef = doc(db, "PatientData", "heysubinoy@gmail.com");
+
     const configuration = new Configuration({
       apiKey: process.env.REACT_APP_OPENAI_API_KEY,
     });
     const openai = new OpenAIApi(configuration);
-    const userDocRef = doc(db, "PatientData", "subhadipsaha@gmail.com");
+
     try {
       const docSnap = await getDoc(userDocRef);
 
       if (!docSnap.exists()) {
-        // If the document doesn't exist, create it with the initial array
-
         console.log(docSnap);
       } else {
         const chatHistory = docSnap.data().chatHistory || [];
@@ -122,8 +120,8 @@ const GetYourData = () => {
           frequency_penalty: 0,
           presence_penalty: 0,
         });
-        const text = completion.data.choices[0].message.content;
-        console.log(text);
+        setText(completion.data.choices[0].message.content);
+    
 
         function downloadTextFile() {
           var blob = new Blob([text], { type: "text/plain" });
@@ -148,13 +146,13 @@ const GetYourData = () => {
   async function mew2() {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    // const userEmail = user.email;
-    // console.log(userEmail);
+    const userEmail = user.email;
+    const userDocRef = doc(db, "PatientData", "heysubinoy@gmail.com");
     const configuration = new Configuration({
       apiKey: process.env.REACT_APP_OPENAI_API_KEY,
     });
     const openai = new OpenAIApi(configuration);
-    const userDocRef = doc(db, "PatientData", "subhadipsaha@gmail.com");
+
     try {
       const docSnap = await getDoc(userDocRef);
 
@@ -197,9 +195,8 @@ Your report should follow this format:\
           frequency_penalty: 0,
           presence_penalty: 0,
         });
-        const text = completion.data.choices[0].message.content;
-        console.log(text);
-
+        setText2(completion.data.choices[0].message.content);
+        console.log(text2);
         function downloadTextFile() {
           var blob = new Blob([text], { type: "text/plain" });
           var url = URL.createObjectURL(blob);
@@ -230,41 +227,12 @@ Your report should follow this format:\
           <p>
             <strong>Key Points:</strong>
           </p>
-          <ul>
-            <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-            <li>
-              Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </li>
-            <li>
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris.
-            </li>
-            <li>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum dolore.
-            </li>
-            <li>
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-              officia deserunt mollit.
-            </li>
-          </ul>
+          {text}
         </div>
 
         <div style={testReportStyle}>
           <h3>Test Reports:</h3>
-          <p>
-            <strong>Report 1:</strong> Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit.
-          </p>
-          <p>
-            <strong>Report 2:</strong> Sed do eiusmod tempor incididunt ut
-            labore et dolore magna aliqua.
-          </p>
-          <p>
-            <strong>Report 3:</strong> Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris.
-          </p>
-          {/* Add more test reports as needed */}
+          {text2}
         </div>
 
         <div className="button-group" onClick={mew}>

@@ -18,7 +18,8 @@ const YourComponent = () => {
     boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)",
     padding: "30px",
     textAlign: "center",
-    width: "35%",
+    width: "70%", // Adjusted width for better responsiveness
+    margin: "0 auto", // Center the container
   };
 
   const profileImgStyle = {
@@ -40,24 +41,27 @@ const YourComponent = () => {
     fontSize: "16px",
   };
 
-  const infoValueStyle = {
-    fontSize: "15px",
-    marginBottom: "10px",
+  const circularButtonContainer = {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
   };
 
   const circularButtonStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "45px",
-    height: "45px",
+    width: "150px",
+    height: "150px",
     borderRadius: "50%",
     backgroundColor: "#007BFF",
     color: "#fff",
-    fontSize: "5px",
+    fontSize: "14px",
     textDecoration: "none",
-    margin: "0 20px",
+    margin: "10px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     transition: "background-color 0.3s ease",
+    cursor: "pointer",
   };
 
   const circularButtonHoverStyle = {
@@ -66,6 +70,7 @@ const YourComponent = () => {
 
   const blackIconStyle = {
     mixBlendMode: "screen",
+    marginBottom: "10px", // Added space below the icon for better spacing
   };
 
   return (
@@ -73,7 +78,7 @@ const YourComponent = () => {
       <div style={innerContainerStyle}>
         <img
           src="https://cdn.pixabay.com/photo/2017/06/13/12/54/profile-2398783_1280.png"
-          alt="Patient's Profile Picture"
+          alt="Profile Picture of Souradip Pal"
           style={profileImgStyle}
         />
         <h2 style={patientNameStyle}>Souradip Pal</h2>
@@ -92,42 +97,27 @@ const YourComponent = () => {
             Conjunctivitis
           </p>
         </div>
-        <div className="buttonGroup">
-          <div className="button-group">
-            <div>
-              <a href="/chat" style={circularButtonStyle}>
-                <img src="chat.png" alt="" id="icons" />
-                Talk with Disha
-              </a>
-            </div>
-            <div>
-              <a
-                href="/reportGeneration"
-                style={{ ...circularButtonStyle, ...blackIconStyle }}
-              >
-                <img src="report.png" alt="" id="icons" />
-                Conversation Report
-              </a>
-            </div>
-            <div>
-              <a href="/download" style={circularButtonStyle}>
-                <img src="donwload.png" alt="" id="icons" />
-                Report Analysis
-              </a>
-            </div>
-            <div>
-              <a href="/newDoctor" style={circularButtonStyle}>
-                +
-              </a>
-              Connect a Doctor
-            </div>
-            <div>
-              <a href="/login" style={circularButtonStyle}>
-                ➔
-              </a>
-              Logout
-            </div>
-          </div>
+        <div className="buttonGroup" style={circularButtonContainer}>
+          <a href="/disha" style={circularButtonStyle}>
+            <img src="chat.png" alt="Chat Icon" style={blackIconStyle} />
+            Talk with Disha
+          </a>
+          <a href="/download" style={circularButtonStyle}>
+            <img src="download.png" alt="Download Icon" style={blackIconStyle} />
+            Report Analysis
+          </a>
+          <a href="/download" style={circularButtonStyle}>
+            <img src="download.png" alt="Download Icon" style={blackIconStyle} />
+            Report Analysis
+          </a>
+          <a href="/newDoctor" style={circularButtonStyle}>
+            <span style={{ fontSize: "40px", marginBottom: "5px" }}>+</span>
+            Connect a Doctor
+          </a>
+          <a href="/login" style={circularButtonStyle}>
+            <span style={{ fontSize: "30px", marginBottom: "5px" }}>➔</span>
+            Logout
+          </a>
         </div>
       </div>
     </div>

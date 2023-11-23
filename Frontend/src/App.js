@@ -351,9 +351,6 @@ async function makeSpeech(text, user, setTranscript) {
   } catch (error) {
     console.error("Error updating/creating document:", error);
   }
-
-  console.log(transliterate(text));
-
   try {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
