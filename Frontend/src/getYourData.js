@@ -1,19 +1,12 @@
 import React, { useState } from "react";
 import { initializeApp } from "firebase/app";
-import DummyComponent from "./dummyComponent";
 import {
   getFirestore,
-  collection,
-  getDocs,
-  addDoc,
   doc,
-  setDoc,
-  updateDoc,
   getDoc,
 } from "firebase/firestore";
+import { Configuration, OpenAIApi } from "openai";
 import { firebaseConfig } from "./db";
-
-const { Configuration, OpenAIApi } = require("openai");
 
 const GetYourData = (user) => {
   const containerStyle = {
@@ -46,7 +39,7 @@ const GetYourData = (user) => {
     textAlign: "left",
   };
 
-  const viewReportButtonStyle = {
+  const buttonStyle = {
     width: "200px",
     height: "50px",
     border: "none",
@@ -56,9 +49,12 @@ const GetYourData = (user) => {
     borderRadius: "5px",
     cursor: "pointer",
     transition: "background-color 0.3s ease",
+    margin: "10px",
   };
+
   const [text, setText] = useState("Loading...");
   const [text2, setText2] = useState("Loading...");
+
   async function mew() {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
@@ -80,8 +76,8 @@ const GetYourData = (user) => {
         console.log(chatHistory);
         chatHistory.push({
           role: "assistant",
-          content:
-            // eslint-disable-next-line no-multi-str
+          content: 
+          // eslint-disable-next-line no-multi-str
             "MISSION\
           You are a medical notes bot that will be given a chart or symptoms for a patient shortly after intake. You will generate a list of the most likely diagnosis or avenues of investigation for the physician to follow up on, don't write the example format.\
           \
@@ -115,16 +111,16 @@ const GetYourData = (user) => {
           model: "gpt-3.5-turbo",
           messages: chatHistory,
           temperature: 0.2,
-          max_tokens: 1000,
+          max_tokens: 200,
           top_p: 1,
           frequency_penalty: 0,
           presence_penalty: 0,
         });
+
         setText(completion.data.choices[0].message.content);
-    
 
         function downloadTextFile() {
-          var blob = new Blob([text], { type: "text/plain" });
+          var blob = new Blob([completion.data.choices[0].message.content], { type: "text/plain" });
           var url = URL.createObjectURL(blob);
 
           var a = document.createElement("a");
@@ -143,6 +139,7 @@ const GetYourData = (user) => {
       console.error("Error updating/creating document:", error);
     }
   }
+
   async function mew2() {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
@@ -157,16 +154,13 @@ const GetYourData = (user) => {
       const docSnap = await getDoc(userDocRef);
 
       if (!docSnap.exists()) {
-        // If the document doesn't exist, create it with the initial array
-
         console.log(docSnap);
       } else {
         const chatHistory = docSnap.data().chatHistory || [];
         console.log(chatHistory);
         chatHistory.push({
           role: "assistant",
-          content:
-            // eslint-disable-next-line no-multi-str
+          content:  // eslint-disable-next-line no-multi-str
             "# MISSION\
 You are a clinical medical bot. You will be given medical notes, charts, or other logs from the patient or clinician. Your primary job is to recommend specialist referrals and/or follow-up tests and some home remedies .\
 # DISEASE PREDICTION\
@@ -196,9 +190,9 @@ Your report should follow this format:\
           presence_penalty: 0,
         });
         setText2(completion.data.choices[0].message.content);
-        console.log(text2);
+
         function downloadTextFile() {
-          var blob = new Blob([text], { type: "text/plain" });
+          var blob = new Blob([completion.data.choices[0].message.content], { type: "text/plain" });
           var url = URL.createObjectURL(blob);
 
           var a = document.createElement("a");
@@ -235,11 +229,13 @@ Your report should follow this format:\
           {text2}
         </div>
 
-        <div className="button-group" onClick={mew}>
-          <a>View Report Analysis</a>
-        </div>
-        <div className="button-group" onClick={mew2}>
-          <a>View Referral</a>
+        <div className="button-group">
+          <button style={buttonStyle} onClick={mew}>
+            View Report Analysis
+          </button>
+          <button style={buttonStyle} onClick={mew2}>
+            View Referral
+          </button>
         </div>
       </div>
     </div>
@@ -247,3 +243,4 @@ Your report should follow this format:\
 };
 
 export default GetYourData;
+
