@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { Configuration, OpenAIApi } from "openai";
@@ -97,7 +97,9 @@ const GetYourData = (user) => {
       console.error("Error updating/creating document:", error);
     }
   };
-
+  useEffect(() => {
+    initialData();
+  }, []);
   async function mew() {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
@@ -274,11 +276,6 @@ Your report should follow this format:\
               <li key={index}>{line}</li>
             ))}
           </ul>
-        </div>
-
-        <div style={testReportStyle}>
-          <h3>Test Reports:</h3>
-          {text2}
         </div>
 
         <div className="button-group">

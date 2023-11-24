@@ -143,6 +143,10 @@ const YourComponent = () => {
     mixBlendMode: "screen",
     marginBottom: "10px", // Added space below the icon for better spacing
   };
+  const logthisout = () => {
+    logout();
+    
+  };
   if (isAuthenticated) {
     console.log(user);
     return (
