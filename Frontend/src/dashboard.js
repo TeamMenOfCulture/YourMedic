@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import GetYourData from "./getYourData";
 const YourComponent = () => {
   const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
   const STYLES = {
@@ -145,64 +146,72 @@ const YourComponent = () => {
   };
   const logthisout = () => {
     logout();
-    
   };
+  const [show, setShow] = useState(false);
+  const showUpdate = () => {
+    setShow(!show);
+  };
+
   if (isAuthenticated) {
     console.log(user);
     return (
       <div style={containerStyle}>
-        <div style={innerContainerStyle}>
-          <img
-            src={user.picture}
-            alt="Profile Picture of Souradip Pal"
-            style={profileImgStyle}
-          />
-          <h2 style={patientNameStyle}>{user.name}</h2>
-          <div className="profile-info">
-            <p>
-              <span style={infoLabelStyle}>Email:</span> {user.email}
-            </p>
-            <p>
-              <span style={infoLabelStyle}>Phone:</span> +91 98009278273
-            </p>
-            <p>
+        {show ? (
+          <GetYourData show={show} showUpdate={showUpdate} user={user} />
+        ) : (
+          <div style={innerContainerStyle}>
+            <img
+              src={user.picture}
+              alt={"Profile Picture of" + user.name}
+              style={profileImgStyle}
+            />
+            <h2 style={patientNameStyle}>{user.name}</h2>
+            <div className="profile-info">
+              <p>
+                <span style={infoLabelStyle}>Email:</span> {user.email}
+              </p>
+              <p>
+                <span style={infoLabelStyle}>Phone:</span> +91 98009278273
+              </p>
+              {/* <p>
               <span style={infoLabelStyle} id="underdiagnosis">
                 Under Diagnosis:
               </span>{" "}
               Conjunctivitis
-            </p>
+            </p> */}
+            </div>
+            <div className="buttonGroup" style={circularButtonContainer}>
+              <a href="/disha" style={circularButtonStyle}>
+                <img src="chat.png" alt="Chat Icon" style={blackIconStyle} />
+                Talk with Disha
+              </a>
+              <button style={circularButtonStyle} onClick={showUpdate}>
+                <img
+                  src="download.png"
+                  alt="Download Icon"
+                  style={blackIconStyle}
+                />
+                Report Analysis
+              </button>
+              <a href="/download" style={circularButtonStyle}>
+                <img
+                  src="download.png"
+                  alt="Download Icon"
+                  style={blackIconStyle}
+                />
+                Report Analysis
+              </a>
+              <a href="/newDoctor" style={circularButtonStyle}>
+                <span style={{ fontSize: "40px", marginBottom: "5px" }}>+</span>
+                Connect a Doctor
+              </a>
+              <button style={circularButtonStyle} onClick={logthisout}>
+                <span style={{ fontSize: "30px", marginBottom: "5px" }}>➔</span>
+                Logout
+              </button>
+            </div>
           </div>
-          <div className="buttonGroup" style={circularButtonContainer}>
-            <a href="/disha" style={circularButtonStyle}>
-              <img src="chat.png" alt="Chat Icon" style={blackIconStyle} />
-              Talk with Disha
-            </a>
-            <a href="/download" style={circularButtonStyle}>
-              <img
-                src="download.png"
-                alt="Download Icon"
-                style={blackIconStyle}
-              />
-              Report Analysis
-            </a>
-            <a href="/download" style={circularButtonStyle}>
-              <img
-                src="download.png"
-                alt="Download Icon"
-                style={blackIconStyle}
-              />
-              Report Analysis
-            </a>
-            <a href="/newDoctor" style={circularButtonStyle}>
-              <span style={{ fontSize: "40px", marginBottom: "5px" }}>+</span>
-              Connect a Doctor
-            </a>
-            <a href="/login" style={circularButtonStyle}>
-              <span style={{ fontSize: "30px", marginBottom: "5px" }}>➔</span>
-              Logout
-            </a>
-          </div>
-        </div>
+        )}
       </div>
     );
   } else {

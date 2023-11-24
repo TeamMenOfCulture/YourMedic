@@ -4,7 +4,7 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { Configuration, OpenAIApi } from "openai";
 import { firebaseConfig } from "./db";
 
-const GetYourData = (user) => {
+const GetYourData = ({ show, showUpdate, user }) => {
   const containerStyle = {
     fontFamily: "Arial, sans-serif",
     backgroundColor: "#f0f0f0",
@@ -50,14 +50,16 @@ const GetYourData = (user) => {
 
   const [text, setText] = useState("Loading...");
   const [text2, setText2] = useState("Loading...");
-  const lines = text.split("\n");
+  const init = text.split("$");
+  const lines = init[0].split("\n");
   const initialData = async () => {
     console.log("Self Executing");
+    console.log(init[1]);
     try {
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
       const userEmail = user.email;
-      const userDocRef = doc(db, "PatientData", "heysubinoy@gmail.com");
+      const userDocRef = doc(db, "PatientData", userEmail);
 
       const configuration = new Configuration({
         apiKey: process.env.REACT_APP_OPENAI_API_KEY,
@@ -104,7 +106,7 @@ const GetYourData = (user) => {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const userEmail = user.email;
-    const userDocRef = doc(db, "PatientData", "heysubinoy@gmail.com");
+    const userDocRef = doc(db, "PatientData", userEmail);
 
     const configuration = new Configuration({
       apiKey: process.env.REACT_APP_OPENAI_API_KEY,
@@ -191,7 +193,7 @@ const GetYourData = (user) => {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const userEmail = user.email;
-    const userDocRef = doc(db, "PatientData", "heysubinoy@gmail.com");
+    const userDocRef = doc(db, "PatientData", userEmail);
     const configuration = new Configuration({
       apiKey: process.env.REACT_APP_OPENAI_API_KEY,
     });
@@ -282,8 +284,8 @@ Your report should follow this format:\
           <button style={buttonStyle} onClick={mew}>
             View Report Analysis
           </button>
-          <button style={buttonStyle} onClick={initialData}>
-            Generate Data
+          <button style={buttonStyle} onClick={showUpdate}>
+            Close
           </button>
           <button style={buttonStyle} onClick={mew2}>
             View Referral
