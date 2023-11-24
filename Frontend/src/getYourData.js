@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { initializeApp } from "firebase/app";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { Configuration, OpenAIApi } from "openai";
 import { firebaseConfig } from "./db";
 
@@ -54,6 +50,53 @@ const GetYourData = (user) => {
 
   const [text, setText] = useState("Loading...");
   const [text2, setText2] = useState("Loading...");
+  const lines = text.split("\n");
+  const initialData = async () => {
+    console.log("Self Executing");
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const userEmail = user.email;
+      const userDocRef = doc(db, "PatientData", "heysubinoy@gmail.com");
+
+      const configuration = new Configuration({
+        apiKey: process.env.REACT_APP_OPENAI_API_KEY,
+      });
+
+      const openai = new OpenAIApi(configuration);
+
+      const docSnap = await getDoc(userDocRef);
+
+      if (!docSnap.exists()) {
+        console.log(docSnap);
+      } else {
+        const chatHistory = docSnap.data().chatHistory || [];
+        console.log(chatHistory);
+
+        const newMessage = {
+          role: "assistant",
+          content: `MISSION/
+          Write 6 Points about the Paitents health from the data. Make the points short. Add Line Breaks("\n") after each point.`,
+        };
+
+        chatHistory.push(newMessage);
+
+        const completion = await openai.createChatCompletion({
+          model: "gpt-3.5-turbo",
+          messages: chatHistory,
+          temperature: 0.2,
+          max_tokens: 200,
+          top_p: 1,
+          frequency_penalty: 0,
+          presence_penalty: 0,
+        });
+
+        setText(completion.data.choices[0].message.content);
+      }
+    } catch (error) {
+      console.error("Error updating/creating document:", error);
+    }
+  };
 
   async function mew() {
     const app = initializeApp(firebaseConfig);
@@ -76,8 +119,8 @@ const GetYourData = (user) => {
         console.log(chatHistory);
         chatHistory.push({
           role: "assistant",
-          content: 
-          // eslint-disable-next-line no-multi-str
+          content:
+            // eslint-disable-next-line no-multi-str
             "MISSION\
           You are a medical notes bot that will be given a chart or symptoms for a patient shortly after intake. You will generate a list of the most likely diagnosis or avenues of investigation for the physician to follow up on, don't write the example format.\
           \
@@ -117,10 +160,12 @@ const GetYourData = (user) => {
           presence_penalty: 0,
         });
 
-        setText(completion.data.choices[0].message.content);
+        // setText(completion.data.choices[0].message.content);
 
         function downloadTextFile() {
-          var blob = new Blob([completion.data.choices[0].message.content], { type: "text/plain" });
+          var blob = new Blob([completion.data.choices[0].message.content], {
+            type: "text/plain",
+          });
           var url = URL.createObjectURL(blob);
 
           var a = document.createElement("a");
@@ -160,7 +205,8 @@ const GetYourData = (user) => {
         console.log(chatHistory);
         chatHistory.push({
           role: "assistant",
-          content:  // eslint-disable-next-line no-multi-str
+          // eslint-disable-next-line no-multi-str
+          content:
             "# MISSION\
 You are a clinical medical bot. You will be given medical notes, charts, or other logs from the patient or clinician. Your primary job is to recommend specialist referrals and/or follow-up tests and some home remedies .\
 # DISEASE PREDICTION\
@@ -192,7 +238,9 @@ Your report should follow this format:\
         setText2(completion.data.choices[0].message.content);
 
         function downloadTextFile() {
-          var blob = new Blob([completion.data.choices[0].message.content], { type: "text/plain" });
+          var blob = new Blob([completion.data.choices[0].message.content], {
+            type: "text/plain",
+          });
           var url = URL.createObjectURL(blob);
 
           var a = document.createElement("a");
@@ -221,7 +269,11 @@ Your report should follow this format:\
           <p>
             <strong>Key Points:</strong>
           </p>
-          {text}
+          <ul>
+            {lines.map((line, index) => (
+              <li key={index}>{line}</li>
+            ))}
+          </ul>
         </div>
 
         <div style={testReportStyle}>
@@ -233,6 +285,9 @@ Your report should follow this format:\
           <button style={buttonStyle} onClick={mew}>
             View Report Analysis
           </button>
+          <button style={buttonStyle} onClick={initialData}>
+            Generate Data
+          </button>
           <button style={buttonStyle} onClick={mew2}>
             View Referral
           </button>
@@ -243,4 +298,3 @@ Your report should follow this format:\
 };
 
 export default GetYourData;
-
