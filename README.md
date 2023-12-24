@@ -5,6 +5,7 @@ The project is about a virtual doctor who will be listening to the problems of t
 The GPT-3.5-turbo AI model from OpenAI is used in the Virtual Doctor. Users speak medical questions or symptoms into the model, which provides relevant, context-aware responses, including medical advice, suggestions, and potential diagnosis. This improves user access to health information while highlighting the importance of seeking professional medical advice.
 The Azure API is used by the Virtual Doctor to integrate facial expressions. The API converts responses into genuine lip motions when users engage with the virtual interface and ask it a question. This increases user engagement and results in a more authentic and relatable interaction, which contributes to a realistic and immersive experience.
 
+![alt text](https://ibb.co/b3ZWnGc)
 
 ## Features
 
