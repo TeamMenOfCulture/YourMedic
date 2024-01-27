@@ -364,7 +364,7 @@ async function makeSpeech(text, user, setTranscript) {
 
     text = completion.data.choices[0].message.content;
     console.log(text);
-    
+
     const docSnap = await getDoc(userDocRef);
     const chatHistory = docSnap.data().ChatHistory || [];
     chatHistory.push({ role: "system", content: text });

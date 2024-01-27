@@ -24,7 +24,7 @@ const Prescription = () => {
   const apiUrl = "https://ocrimage.azurewebsites.net/upload/";
 
   const uploader = Uploader({
-    apiKey: "public_12a1ybzAoQPUAkbH314vXasd1Qmj", // Get production API keys from Bytescale
+    apiKey: "public_FW25bmjBU8bQePUwRCv1eU4jqJGu", // Get production API keys from Bytescale
   });
 
   function fake() {

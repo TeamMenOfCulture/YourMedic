@@ -182,23 +182,24 @@ const YourComponent = () => {
             </div>
             <div className="buttonGroup" style={circularButtonContainer}>
               <a href="/disha" style={circularButtonStyle}>
-                <img src="chat.png" alt="Chat Icon" style={blackIconStyle} />
+                {/* <img src="chat.png" alt="Chat Icon" style={blackIconStyle} /> */}
                 Talk with Disha
               </a>
               <button style={circularButtonStyle} onClick={showUpdate}>
-                <img
+                {/* <img
                   src="download.png"
                   alt="Download Icon"
                   style={blackIconStyle}
-                />
+                /> */}
                 Report Analysis
               </button>
-              <a href="/download" style={circularButtonStyle}>
-                <img
-                  src="download.png"
+              <a href="/prescription" style={circularButtonStyle}>
+                {/* <img
+                  src="https://static.thenounproject.com/png/1405112-200.png"
                   alt="Download Icon"
                   style={blackIconStyle}
-                />
+                  height={"50px"}
+                /> */}
                 Report Analysis
               </a>
               <a href="/newDoctor" style={circularButtonStyle}>

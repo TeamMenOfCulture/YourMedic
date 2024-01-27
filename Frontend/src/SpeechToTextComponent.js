@@ -23,7 +23,7 @@ const SpeechRecognitionComponent = (props) => {
     // Initialize the Speech SDK
 
     const speechConfig = SpeechConfig.fromSubscription(
-      "7d4c372990c24e7eb6bf68bff6f09ea0",
+      "API_KEY_HERE",
       "eastasia"
     );
     speechConfig.speechRecognitionLanguage = "hi-IN";
